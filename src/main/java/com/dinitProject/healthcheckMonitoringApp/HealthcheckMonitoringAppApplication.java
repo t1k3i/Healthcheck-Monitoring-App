@@ -1,4 +1,4 @@
-package com.dinitProject.healthcheck_monitoring_app;
+package com.dinitProject.healthcheckMonitoringApp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

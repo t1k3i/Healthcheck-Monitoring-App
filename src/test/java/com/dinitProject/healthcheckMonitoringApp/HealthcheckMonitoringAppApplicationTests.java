@@ -1,4 +1,4 @@
-package com.dinitProject.healthcheck_monitoring_app;
+package com.dinitProject.healthcheckMonitoringApp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
