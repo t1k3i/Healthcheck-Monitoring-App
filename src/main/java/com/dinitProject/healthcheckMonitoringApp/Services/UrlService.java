@@ -21,4 +21,12 @@ public class UrlService {
         return urlRepository.findAll();
     }
 
+    public URLInfo getUrl(Long id) {
+        return urlRepository.findById(id).orElse(null);
+    }
+
+    public void addUrlInfo(URLInfo url) {
+        System.out.println(url);
+    }
+
 }

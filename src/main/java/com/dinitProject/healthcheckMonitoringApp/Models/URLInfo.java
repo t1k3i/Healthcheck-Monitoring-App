@@ -73,4 +73,15 @@ public class URLInfo {
     public void setLastChecked(LocalDateTime lastChecked) {
         this.lastChecked = lastChecked;
     }
+
+    @Override
+    public String toString() {
+        return "URLInfo{" +
+                "id=" + id +
+                ", url='" + url + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", status=" + status +
+                ", lastChecked=" + lastChecked +
+                '}';
+    }
 }
