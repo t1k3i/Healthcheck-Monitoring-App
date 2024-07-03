@@ -1,21 +1,17 @@
 package com.dinitProject.healthcheckMonitoringApp.Dtos;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import com.dinitProject.healthcheckMonitoringApp.Models.URLInfo;
 
 public class UrlDtoGet {
 
     private String url;
     private String displayName;
-    private Long status;
+    private Boolean healthy;
 
-    public UrlDtoGet() {}
-
-    public UrlDtoGet(String url, String displayName, Long status) {
+    public UrlDtoGet(String url, String displayName, Boolean healthy) {
         this.url = url;
         this.displayName = displayName;
-        this.status = status;
+        this.healthy = healthy;
     }
 
     public String getUrl() {
@@ -34,12 +30,12 @@ public class UrlDtoGet {
         this.displayName = displayName;
     }
 
-    public Long getStatus() {
-        return status;
+    public Boolean isHealthy() {
+        return healthy;
     }
 
-    public void setStatus(Long status) {
-        this.status = status;
+    public void setHealthy(Boolean healthy) {
+        this.healthy = healthy;
     }
 
     @Override
@@ -47,7 +43,12 @@ public class UrlDtoGet {
         return "UrlDtoGet{" +
                 "url='" + url + '\'' +
                 ", displayName='" + displayName + '\'' +
-                ", status=" + status +
+                ", healthy=" + healthy +
                 '}';
     }
+
+    public static UrlDtoGet toUrlDto(URLInfo urlInfo) {
+        return new UrlDtoGet(urlInfo.getUrl(), urlInfo.getDisplayName(), urlInfo.isHealthy());
+    }
+
 }

@@ -7,15 +7,20 @@ POST http://localhost:8080/url/add
 Content-Type: application/json
 
 {
-  "url": "http://example49.com",
-  "displayName": "Example24rwqff",
-  "status": 200
+  "url": "https://httpstat.us/300",
+  "displayName": "ehsfe3245r"
 }
 
 ###
 
-DELETE http://localhost:8080/url/delete/13
+DELETE http://localhost:8080/url/delete/10
 
 ###
 
-PUT http://localhost:8080/url/update/14?newDisplayName=49example49
+PUT http://localhost:8080/url/update/9?newDisplayName=49example49
+
+###
+
+DELETE http://localhost:8080/url/delete/all
+
+###

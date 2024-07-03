@@ -12,25 +12,15 @@ public class URLInfo {
     private Long id;
     private String url;
     private String displayName;
-    private int status;
+    private Integer status;
     private LocalDateTime lastChecked;
-
-    public URLInfo(Long id, String url, String displayName,
-                   int status, LocalDateTime lastChecked) {
-        this.id = id;
-        this.url = url;
-        this.displayName = displayName;
-        this.status = status;
-        this.lastChecked = lastChecked;
-    }
+    private Boolean healthy;
 
     public URLInfo() {}
 
-    public URLInfo(String url, String displayName, int status) {
+    public URLInfo(String url, String displayName) {
         this.url = url;
         this.displayName = displayName;
-        this.status = status;
-        this.lastChecked = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -45,12 +35,16 @@ public class URLInfo {
         return this.displayName;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return this.status;
     }
 
     public LocalDateTime getLastChecked() {
         return this.lastChecked;
+    }
+
+    public Boolean isHealthy() {
+        return healthy;
     }
 
     public void setId(Long id) {
@@ -65,12 +59,16 @@ public class URLInfo {
         this.displayName = displayName;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
     public void setLastChecked(LocalDateTime lastChecked) {
         this.lastChecked = lastChecked;
+    }
+
+    public void setHealthy(Boolean healthy) {
+        this.healthy = healthy;
     }
 
     @Override
@@ -81,6 +79,7 @@ public class URLInfo {
                 ", displayName='" + displayName + '\'' +
                 ", status=" + status +
                 ", lastChecked=" + lastChecked +
+                ", healthy=" + healthy +
                 '}';
     }
 }

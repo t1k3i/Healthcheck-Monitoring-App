@@ -1,5 +1,6 @@
 package com.dinitProject.healthcheckMonitoringApp.Dtos;
 
+import com.dinitProject.healthcheckMonitoringApp.Models.URLInfo;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -19,11 +20,6 @@ public class UrlDtoAdd {
     @NotEmpty(message = "Display name can not be empty")
     @Size(min = 3, max = 50, message = "Display name should be between 3 and 50 charachters")
     private String displayName;
-
-    public UrlDtoAdd(String url, String displayName) {
-        this.url = url;
-        this.displayName = displayName;
-    }
 
     public String getUrl() {
         return url;
@@ -49,4 +45,7 @@ public class UrlDtoAdd {
                 '}';
     }
 
+    public static URLInfo toEntity(UrlDtoAdd urlDto){
+        return new URLInfo(urlDto.getUrl(), urlDto.getDisplayName());
+    }
 }

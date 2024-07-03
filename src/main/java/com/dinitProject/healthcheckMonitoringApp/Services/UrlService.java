@@ -9,6 +9,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,67 +21,70 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
 
-    private final ModelMapper modelMapper;
-
     @Autowired
-    public UrlService(UrlRepository urlRepository, ModelMapper modelMapper) {
+    public UrlService(UrlRepository urlRepository) {
         this.urlRepository = urlRepository;
-        this.modelMapper = modelMapper;
     }
 
     public List<UrlDtoGet> getUrls() {
         List<UrlDtoGet> list = new ArrayList<>();
         for (URLInfo urlInfo : urlRepository.findAll())
-            list.add(convertToUrlDto(urlInfo));
+            list.add(UrlDtoGet.toUrlDto(urlInfo));
         return list;
     }
 
     public UrlDtoGet getUrl(Long id) {
         URLInfo urlInfo = urlRepository.findById(id).orElse(null);
-        UrlDtoGet urlDtoGet = urlInfo != null ? convertToUrlDto(urlInfo) : null;
-        return urlDtoGet;
+        return urlInfo != null ? UrlDtoGet.toUrlDto(urlInfo) : null;
     }
 
-    public void addUrlInfo(UrlDtoAdd url) {
-        URLInfo urlInfo = convertToURLInfo(url);
-        if (!urlRepository.findByUrl(urlInfo.getUrl()).isPresent() &&
-                !urlRepository.findByDisplayName(urlInfo.getDisplayName()).isPresent()) {
+    public void addUrlInfo(UrlDtoAdd url) throws IOException {
+        var urlInfo = UrlDtoAdd.toEntity(url);
+        if (!urlOrNameExists(url.getUrl(), url.getDisplayName())) {
                 urlRepository.save(urlInfo);
-        } else {
-            throw new IllegalArgumentException("Url already exists");
+                return;
         }
+        throw new IllegalArgumentException("Url already exists");
+    }
+
+    private boolean urlOrNameExists(String url, String displayName) {
+        return urlRepository.findByUrl(url).isPresent() ||
+                displayNameExists(displayName);
+    }
+
+    private boolean displayNameExists(String displayName) {
+        return urlRepository.findByDisplayName(displayName).isPresent();
     }
 
     public void deleteUrl(Long userId) {
         if (urlRepository.existsById(userId)) {
             urlRepository.deleteById(userId);
-        } else {
-            throw new IllegalArgumentException("Url does not exist");
+            return;
         }
+        throw new IllegalArgumentException("Url does not exist");
     }
 
-    private URLInfo convertToURLInfo(UrlDtoAdd urlDtoAdd) {
-        URLInfo urlInfo = new URLInfo();
-        urlInfo = modelMapper.map(urlDtoAdd, URLInfo.class);
-        urlInfo.setLastChecked(LocalDateTime.now());
-        urlInfo.setStatus(200); // TODO
-        return urlInfo;
-    }
-
-    private UrlDtoGet convertToUrlDto(URLInfo urlInfo) {
-        UrlDtoGet urlDtoGet = new UrlDtoGet();
-        urlDtoGet = modelMapper.map(urlInfo, UrlDtoGet.class);
-        return urlDtoGet;
+    public void deleteAll() {
+        urlRepository.deleteAll();
     }
 
     @Transactional
     public void updateDisplayName(Long userId, String newDisplayName) {
         URLInfo urlInfo = urlRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("Url does not exist"));
-        if (!urlRepository.findByDisplayName(newDisplayName).isPresent()) {
+        if (!displayNameExists(newDisplayName)) {
             urlInfo.setDisplayName(newDisplayName);
-        } else {
-            throw new IllegalArgumentException("Display name already present");
+            return;
         }
+        throw new IllegalArgumentException("Display name already present");
     }
+
+    private int getStatusFromUrl(String urlText) throws IOException {
+        URL url = new URL(urlText);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        int responseCode = con.getResponseCode();
+        con.disconnect();
+        return responseCode;
+    }
+
 }

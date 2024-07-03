@@ -9,6 +9,7 @@ import org.hibernate.annotations.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ public class UrlController {
     }
 
     @PostMapping("/add")
-    public void addURLInfo(@Valid @RequestBody UrlDtoAdd urlInfo) {
+    public void addURLInfo(@Valid @RequestBody UrlDtoAdd urlInfo) throws IOException {
         urlService.addUrlInfo(urlInfo);
     }
 
@@ -40,6 +41,11 @@ public class UrlController {
     @DeleteMapping("/delete/{userId}")
     public void deleteUrl(@PathVariable("userId") Long userId) {
         urlService.deleteUrl(userId);
+    }
+
+    @DeleteMapping("/delete/all")
+    public void deleteAll() {
+        urlService.deleteAll();
     }
 
     @PutMapping("update/{userId}")
