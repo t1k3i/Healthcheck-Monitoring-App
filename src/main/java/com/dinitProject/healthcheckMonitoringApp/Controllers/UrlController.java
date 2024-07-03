@@ -33,13 +33,20 @@ public class UrlController {
     }
 
     @GetMapping("/{userId}")
-    public UrlDtoGet getUrl(@PathVariable Long userId) {
+    public UrlDtoGet getUrl(@PathVariable("userId") Long userId) {
         return urlService.getUrl(userId);
     }
 
     @DeleteMapping("/delete/{userId}")
     public void deleteUrl(@PathVariable("userId") Long userId) {
         urlService.deleteUrl(userId);
+    }
+
+    @PutMapping("update/{userId}")
+    public void updateDisplayName(
+            @PathVariable("userId") Long userId,
+            @RequestParam(required = true) String newDisplayName) {
+        urlService.updateDisplayName(userId, newDisplayName);
     }
 
 }

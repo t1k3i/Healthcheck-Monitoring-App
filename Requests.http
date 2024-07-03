@@ -15,3 +15,7 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:8080/url/delete/13
+
+###
+
+PUT http://localhost:8080/url/update/14?newDisplayName=49example49

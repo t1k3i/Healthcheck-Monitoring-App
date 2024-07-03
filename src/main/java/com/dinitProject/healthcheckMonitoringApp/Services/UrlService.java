@@ -4,6 +4,7 @@ import com.dinitProject.healthcheckMonitoringApp.Dtos.UrlDtoAdd;
 import com.dinitProject.healthcheckMonitoringApp.Dtos.UrlDtoGet;
 import com.dinitProject.healthcheckMonitoringApp.Models.URLInfo;
 import com.dinitProject.healthcheckMonitoringApp.Repositorys.UrlRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,4 +71,14 @@ public class UrlService {
         return urlDtoGet;
     }
 
+    @Transactional
+    public void updateDisplayName(Long userId, String newDisplayName) {
+        URLInfo urlInfo = urlRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("Url does not exist"));
+        if (!urlRepository.findByDisplayName(newDisplayName).isPresent()) {
+            urlInfo.setDisplayName(newDisplayName);
+        } else {
+            throw new IllegalArgumentException("Display name already present");
+        }
+    }
 }
