@@ -1,10 +1,17 @@
 package com.dinitProject.healthcheckMonitoringApp;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class HealthcheckMonitoringAppApplication {
+
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(HealthcheckMonitoringAppApplication.class, args);

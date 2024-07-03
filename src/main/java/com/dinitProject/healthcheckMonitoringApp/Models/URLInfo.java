@@ -26,12 +26,11 @@ public class URLInfo {
 
     public URLInfo() {}
 
-    public URLInfo(String url, String displayName,
-                   int status, LocalDateTime lastChecked) {
+    public URLInfo(String url, String displayName, int status) {
         this.url = url;
         this.displayName = displayName;
         this.status = status;
-        this.lastChecked = lastChecked;
+        this.lastChecked = LocalDateTime.now();
     }
 
     public Long getId() {

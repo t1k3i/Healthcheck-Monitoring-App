@@ -1,7 +1,10 @@
 package com.dinitProject.healthcheckMonitoringApp.Controllers;
 
+import com.dinitProject.healthcheckMonitoringApp.Dtos.UrlDtoAdd;
+import com.dinitProject.healthcheckMonitoringApp.Dtos.UrlDtoGet;
 import com.dinitProject.healthcheckMonitoringApp.Models.URLInfo;
 import com.dinitProject.healthcheckMonitoringApp.Services.UrlService;
+import jakarta.validation.Valid;
 import org.hibernate.annotations.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,18 +23,23 @@ public class UrlController {
     }
 
     @PostMapping("/add")
-    public void addURLInfo(@RequestBody URLInfo urlInfo) {
+    public void addURLInfo(@Valid @RequestBody UrlDtoAdd urlInfo) {
         urlService.addUrlInfo(urlInfo);
     }
 
     @GetMapping
-    public List<URLInfo> getUrls() {
+    public List<UrlDtoGet> getUrls() {
         return urlService.getUrls();
     }
 
     @GetMapping("/{userId}")
-    public URLInfo getUrl(@PathVariable Long userId) {
+    public UrlDtoGet getUrl(@PathVariable Long userId) {
         return urlService.getUrl(userId);
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public void deleteUrl(@PathVariable("userId") Long userId) {
+        urlService.deleteUrl(userId);
     }
 
 }

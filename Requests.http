@@ -7,9 +7,11 @@ POST http://localhost:8080/url/add
 Content-Type: application/json
 
 {
-  "id": 6,
-  "url": "http://example20.com",
-  "displayName": "Example",
-  "status": 200,
-  "lastChecked": "2024-07-02T12:34:56"
+  "url": "http://example49.com",
+  "displayName": "Example24rwqff",
+  "status": 200
 }
+
+###
+
+DELETE http://localhost:8080/url/delete/13
