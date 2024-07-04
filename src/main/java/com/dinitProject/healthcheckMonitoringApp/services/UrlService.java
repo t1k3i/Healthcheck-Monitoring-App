@@ -30,19 +30,31 @@ public class UrlService {
     }
 
     public List<UrlDtoGet> getUrls() {
-        List<UrlDtoGet> list = new ArrayList<>();
-        for (URLInfo urlInfo : urlRepository.findAll())
-            list.add(UrlDtoGet.toUrlDto(urlInfo));
-        return list;
+        try {
+            List<UrlDtoGet> list = new ArrayList<>();
+            List<URLInfo> urls = urlRepository.findAll();
+            for (URLInfo urlInfo : urls)
+                list.add(UrlDtoGet.toUrlDto(urlInfo));
+            return list;
+        } catch (Exception ex) {
+            throw new RuntimeException("Database error");
+        }
     }
 
     public List<URLInfo> getFullUrls() {
-        return new ArrayList<>(urlRepository.findAll());
+        return urlRepository.findAll();
     }
 
     public UrlDtoGet getUrl(Long id) {
-        URLInfo urlInfo = urlRepository.findById(id).orElse(null);
-        return urlInfo != null ? UrlDtoGet.toUrlDto(urlInfo) : null;
+        URLInfo urlInfo;
+        try {
+            urlInfo = urlRepository.findById(id).orElse(null);
+        } catch (Exception ex) {
+            throw new RuntimeException("Database error");
+        }
+        if (urlInfo == null)
+            throw new IllegalArgumentException("Id not found");
+        return UrlDtoGet.toUrlDto(urlInfo);
     }
 
     public void addUrlInfo(UrlDtoAdd url) throws IOException {
@@ -62,13 +74,21 @@ public class UrlService {
     }
 
     public void deleteUrl(Long userId) {
-        if (!urlRepository.existsById(userId))
-            throw new IllegalArgumentException("Url does not exist");
-        urlRepository.deleteById(userId);
+        try {
+            if (!urlRepository.existsById(userId))
+                throw new IllegalArgumentException("Id not found");
+            urlRepository.deleteById(userId);
+        } catch (Exception ex) {
+            throw new RuntimeException("Database error");
+        }
     }
 
     public void deleteAll() {
-        urlRepository.deleteAll();
+        try {
+            urlRepository.deleteAll();
+        } catch (Exception ex) {
+            throw new RuntimeException("Database error");
+        }
     }
 
     @Transactional
