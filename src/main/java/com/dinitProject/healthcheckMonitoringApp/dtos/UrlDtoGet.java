@@ -1,6 +1,6 @@
-package com.dinitProject.healthcheckMonitoringApp.Dtos;
+package com.dinitProject.healthcheckMonitoringApp.dtos;
 
-import com.dinitProject.healthcheckMonitoringApp.Models.URLInfo;
+import com.dinitProject.healthcheckMonitoringApp.models.URLInfo;
 
 public class UrlDtoGet {
 

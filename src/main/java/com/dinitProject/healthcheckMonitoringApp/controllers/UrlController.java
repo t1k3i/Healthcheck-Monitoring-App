@@ -1,11 +1,9 @@
-package com.dinitProject.healthcheckMonitoringApp.Controllers;
+package com.dinitProject.healthcheckMonitoringApp.controllers;
 
-import com.dinitProject.healthcheckMonitoringApp.Dtos.UrlDtoAdd;
-import com.dinitProject.healthcheckMonitoringApp.Dtos.UrlDtoGet;
-import com.dinitProject.healthcheckMonitoringApp.Models.URLInfo;
-import com.dinitProject.healthcheckMonitoringApp.Services.UrlService;
+import com.dinitProject.healthcheckMonitoringApp.dtos.UrlDtoAdd;
+import com.dinitProject.healthcheckMonitoringApp.dtos.UrlDtoGet;
+import com.dinitProject.healthcheckMonitoringApp.services.UrlService;
 import jakarta.validation.Valid;
-import org.hibernate.annotations.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +21,7 @@ public class UrlController {
         this.urlService = urlService;
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     public void addURLInfo(@Valid @RequestBody UrlDtoAdd urlInfo) throws IOException {
         urlService.addUrlInfo(urlInfo);
     }
@@ -38,17 +36,17 @@ public class UrlController {
         return urlService.getUrl(userId);
     }
 
-    @DeleteMapping("/delete/{userId}")
+    @DeleteMapping("/{userId}")
     public void deleteUrl(@PathVariable("userId") Long userId) {
         urlService.deleteUrl(userId);
     }
 
-    @DeleteMapping("/delete/all")
+    @DeleteMapping("/all")
     public void deleteAll() {
         urlService.deleteAll();
     }
 
-    @PutMapping("update/{userId}")
+    @PutMapping("/{userId}")
     public void updateDisplayName(
             @PathVariable("userId") Long userId,
             @RequestParam(required = true) String newDisplayName) {

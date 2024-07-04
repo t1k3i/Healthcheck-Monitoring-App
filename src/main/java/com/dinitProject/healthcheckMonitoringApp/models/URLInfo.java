@@ -1,4 +1,4 @@
-package com.dinitProject.healthcheckMonitoringApp.Models;
+package com.dinitProject.healthcheckMonitoringApp.models;
 
 import jakarta.persistence.*;
 

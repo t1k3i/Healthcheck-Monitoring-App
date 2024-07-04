@@ -1,6 +1,6 @@
-package com.dinitProject.healthcheckMonitoringApp.Repositorys;
+package com.dinitProject.healthcheckMonitoringApp.repositorys;
 
-import com.dinitProject.healthcheckMonitoringApp.Models.URLInfo;
+import com.dinitProject.healthcheckMonitoringApp.models.URLInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
