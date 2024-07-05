@@ -95,8 +95,8 @@ public class UrlService {
             urlInfo.setUrl(newUrl);
     }
 
-    public int getStatusFromUrl(String urlText) throws IOException {
-        URL url = new URL(urlText);
+    public int getStatusFromUrl(String urlText) throws IOException, URISyntaxException {
+        URL url = new URI(urlText).toURL();
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         int responseCode = con.getResponseCode();
         con.disconnect();
