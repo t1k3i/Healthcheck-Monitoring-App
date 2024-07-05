@@ -1,4 +1,4 @@
-package com.dinitProject.healthcheckMonitoringApp.exceptions;
+package com.dinitProject.healthcheckMonitoringApp.exceptions.conflict;
 
 public class UrlConflictException extends ConflictException {
 
