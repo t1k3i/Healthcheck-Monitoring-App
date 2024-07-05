@@ -3,6 +3,9 @@ package com.dinitProject.healthcheckMonitoringApp.services;
 import com.dinitProject.healthcheckMonitoringApp.dtos.UrlDtoAdd;
 import com.dinitProject.healthcheckMonitoringApp.dtos.UrlDtoGet;
 import com.dinitProject.healthcheckMonitoringApp.dtos.UrlResponseDto;
+import com.dinitProject.healthcheckMonitoringApp.exceptions.DisplayNameConflictException;
+import com.dinitProject.healthcheckMonitoringApp.exceptions.UrlConflictException;
+import com.dinitProject.healthcheckMonitoringApp.exceptions.UrlNotFoundException;
 import com.dinitProject.healthcheckMonitoringApp.models.URLInfo;
 import com.dinitProject.healthcheckMonitoringApp.repositorys.UrlRepository;
 import jakarta.transaction.Transactional;
@@ -30,15 +33,11 @@ public class UrlService {
     }
 
     public List<UrlDtoGet> getUrls() {
-        try {
-            List<UrlDtoGet> list = new ArrayList<>();
-            List<URLInfo> urls = urlRepository.findAll();
-            for (URLInfo urlInfo : urls)
-                list.add(UrlDtoGet.toUrlDto(urlInfo));
-            return list;
-        } catch (Exception ex) {
-            throw new RuntimeException("Database error");
-        }
+        List<UrlDtoGet> list = new ArrayList<>();
+        List<URLInfo> urls = urlRepository.findAll();
+        for (URLInfo urlInfo : urls)
+            list.add(UrlDtoGet.toUrlDto(urlInfo));
+        return list;
     }
 
     public List<URLInfo> getFullUrls() {
@@ -46,58 +45,51 @@ public class UrlService {
     }
 
     public UrlDtoGet getUrl(Long id) {
-        URLInfo urlInfo;
-        try {
-            urlInfo = urlRepository.findById(id).orElse(null);
-        } catch (Exception ex) {
-            throw new RuntimeException("Database error");
-        }
+        URLInfo urlInfo = urlRepository.findById(id).orElse(null);
         if (urlInfo == null)
-            throw new IllegalArgumentException("Id not found");
+            throw new UrlNotFoundException();
         return UrlDtoGet.toUrlDto(urlInfo);
     }
 
-    public void addUrlInfo(UrlDtoAdd url) throws IOException {
-        if (urlOrNameExists(url.getUrl(), url.getDisplayName()))
-            throw new IllegalArgumentException("Url already exists");
-        var urlInfo = UrlDtoAdd.toEntity(url);
-        urlRepository.save(urlInfo);
+    public void deleteUrl(Long urlId) {
+        if (!urlRepository.existsById(urlId))
+            throw new UrlNotFoundException();
+        urlRepository.deleteById(urlId);
     }
 
-    private boolean urlOrNameExists(String url, String displayName) {
-        return urlRepository.findByUrl(url).isPresent() ||
-                displayNameExists(displayName);
+    public void deleteAll() {
+        urlRepository.deleteAll();
+    }
+
+    public void addUrlInfo(UrlDtoAdd url) {
+        if (urlExists(url.getUrl()))
+            throw new UrlConflictException();
+        if (displayNameExists(url.getDisplayName()))
+            throw new DisplayNameConflictException();
+        var urlInfo = UrlDtoAdd.toEntity(url);
+        urlRepository.save(urlInfo);
     }
 
     private boolean displayNameExists(String displayName) {
         return urlRepository.findByDisplayName(displayName).isPresent();
     }
 
-    public void deleteUrl(Long userId) {
-        try {
-            if (!urlRepository.existsById(userId))
-                throw new IllegalArgumentException("Id not found");
-            urlRepository.deleteById(userId);
-        } catch (Exception ex) {
-            throw new RuntimeException("Database error");
-        }
-    }
-
-    public void deleteAll() {
-        try {
-            urlRepository.deleteAll();
-        } catch (Exception ex) {
-            throw new RuntimeException("Database error");
-        }
+    private boolean urlExists(String url) {
+        return urlRepository.findByUrl(url).isPresent();
     }
 
     @Transactional
-    public void updateDisplayName(Long userId, String newDisplayName) {
-        URLInfo urlInfo = urlRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("Url does not exist"));
+    public void updateDisplayName(Long urlId, String newDisplayName, String newUrl) {
+        URLInfo urlInfo = urlRepository.findById(urlId).orElse(null);
+        if (urlInfo == null)
+            throw new UrlNotFoundException();
         if (displayNameExists(newDisplayName))
-            throw new IllegalArgumentException("Display name already present");
+            throw new DisplayNameConflictException();
+        if (newUrl != null && urlExists(newUrl))
+            throw new UrlConflictException();
         urlInfo.setDisplayName(newDisplayName);
+        if (newUrl != null)
+            urlInfo.setUrl(newUrl);
     }
 
     public int getStatusFromUrl(String urlText) throws IOException {
