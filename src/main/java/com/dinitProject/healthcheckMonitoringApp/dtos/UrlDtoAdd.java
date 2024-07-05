@@ -18,7 +18,7 @@ public class UrlDtoAdd {
     private String url;
     @NotNull(message = "Display name can not be null")
     @NotEmpty(message = "Display name can not be empty")
-    @Size(min = 3, max = 50, message = "Display name should be between 3 and 50 charachters")
+    @Size(min = 1, max = 255)
     private String displayName;
 
     public String getUrl() {

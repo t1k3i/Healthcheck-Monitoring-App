@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class HealthCheckJob {
 
     @Transactional
     @Scheduled(fixedDelayString = "${fixed.delay}")
-    public void updateDB() throws IOException, URISyntaxException, InterruptedException {
+    public void updateDB() throws IOException {
         List<URLInfo> urls = urlService.getFullUrls();
         for (URLInfo url : urls) {
             int newStatus = urlService.getStatusFromUrl(url.getUrl());

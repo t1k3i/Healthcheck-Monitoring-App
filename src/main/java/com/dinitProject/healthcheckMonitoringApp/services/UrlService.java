@@ -3,6 +3,7 @@ package com.dinitProject.healthcheckMonitoringApp.services;
 import com.dinitProject.healthcheckMonitoringApp.dtos.UrlDtoAdd;
 import com.dinitProject.healthcheckMonitoringApp.dtos.UrlDtoGet;
 import com.dinitProject.healthcheckMonitoringApp.dtos.UrlResponseDto;
+import com.dinitProject.healthcheckMonitoringApp.dtos.UrlUpdateDto;
 import com.dinitProject.healthcheckMonitoringApp.exceptions.conflict.DisplayNameConflictException;
 import com.dinitProject.healthcheckMonitoringApp.exceptions.conflict.UrlConflictException;
 import com.dinitProject.healthcheckMonitoringApp.exceptions.notfound.UrlNotFoundException;
@@ -79,10 +80,12 @@ public class UrlService {
     }
 
     @Transactional
-    public void updateDisplayName(Long urlId, String newDisplayName, String newUrl) {
+    public void updateDisplayName(Long urlId, UrlUpdateDto newUrlInfo) {
         URLInfo urlInfo = urlRepository.findById(urlId).orElse(null);
         if (urlInfo == null)
             throw new UrlNotFoundException();
+        String newDisplayName = newUrlInfo.getDisplayName();
+        String newUrl = newUrlInfo.getUrl();
         if (displayNameExists(newDisplayName))
             throw new DisplayNameConflictException();
         if (newUrl != null && urlExists(newUrl))

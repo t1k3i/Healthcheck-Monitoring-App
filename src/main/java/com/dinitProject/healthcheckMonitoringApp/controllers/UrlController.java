@@ -2,6 +2,7 @@ package com.dinitProject.healthcheckMonitoringApp.controllers;
 
 import com.dinitProject.healthcheckMonitoringApp.dtos.UrlDtoAdd;
 import com.dinitProject.healthcheckMonitoringApp.dtos.UrlDtoGet;
+import com.dinitProject.healthcheckMonitoringApp.dtos.UrlUpdateDto;
 import com.dinitProject.healthcheckMonitoringApp.services.UrlService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,8 @@ public class UrlController {
     @PutMapping("/{urlId}")
     public void updateDisplayName(
             @PathVariable("urlId") Long urlId,
-            @RequestParam(required = true) String newDisplayName,
-            @RequestParam(required = false) String newUrl) {
-        urlService.updateDisplayName(urlId, newDisplayName, newUrl);
+            @Valid @RequestBody UrlUpdateDto urlInfo) {
+        urlService.updateDisplayName(urlId, urlInfo);
     }
 
 }
