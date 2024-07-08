@@ -21,6 +21,13 @@ public class UrlDtoAdd {
     @Size(min = 1, max = 255)
     private String displayName;
 
+    public UrlDtoAdd() {}
+
+    public UrlDtoAdd(String url, String displayName) {
+        this.url = url;
+        this.displayName = displayName;
+    }
+
     public String getUrl() {
         return url;
     }

@@ -12,14 +12,11 @@ import com.dinitProject.healthcheckMonitoringApp.repositorys.UrlRepository;
 import jakarta.transaction.Transactional;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
 import java.net.*;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +24,11 @@ import java.util.List;
 public class UrlService {
 
     private final UrlRepository urlRepository;
+    private final RestClient restClient;
 
-    @Autowired
     public UrlService(UrlRepository urlRepository) {
         this.urlRepository = urlRepository;
+        this.restClient = RestClient.builder().build();
     }
 
     public List<UrlDtoGet> getUrls() {
@@ -104,25 +102,19 @@ public class UrlService {
     }
 
     public boolean checkIfHealthy(String urlStr, int status) {
-        try(HttpClient httpClient = HttpClient.newHttpClient()) {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(urlStr))
-                    .GET()
-                    .build();
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            JSONObject jsonObject;
-            try {
-                jsonObject = new JSONObject(response.body());
-            } catch (JSONException e) {
-                System.out.println("Not the right json structure");
-                return false;
-            }
-            UrlResponseDto urlResponseDto = UrlResponseDto.fromJson(jsonObject);
-            System.out.println(urlResponseDto);
-            return urlResponseDto.getStatus().equals("Healthy") &&
-                    status == HttpURLConnection.HTTP_OK;
-        } catch (URISyntaxException | IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+        String result = restClient.get()
+                .uri(urlStr)
+                .retrieve()
+                .body(String.class);
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(result);
+        } catch (JSONException e) {
+            System.out.println("Not the right json structure");
+            return false;
         }
+        UrlResponseDto urlResponseDto = UrlResponseDto.fromJson(jsonObject);
+        return urlResponseDto.getStatus().equals("Healthy") &&
+                status == HttpURLConnection.HTTP_OK;
     }
 }
