@@ -5,7 +5,6 @@ import com.dinitProject.healthcheckMonitoringApp.dtos.UrlDtoGet;
 import com.dinitProject.healthcheckMonitoringApp.dtos.UrlUpdateDto;
 import com.dinitProject.healthcheckMonitoringApp.services.UrlService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public class UrlController {
 
     private final UrlService urlService;
 
-    @Autowired
     public UrlController(UrlService urlService) {
         this.urlService = urlService;
     }
