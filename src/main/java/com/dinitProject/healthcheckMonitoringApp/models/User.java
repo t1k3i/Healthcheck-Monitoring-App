@@ -2,7 +2,7 @@ package com.dinitProject.healthcheckMonitoringApp.models;
 
 import jakarta.persistence.*;
 
-import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "\"user\"")
@@ -17,18 +17,20 @@ public class User {
     private String username;
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(
                     name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
     public User() {}
 
-    public User(String firstName, String lastName, String username, String password, Collection<Role> roles) {
+    public User(String firstName, String lastName, String username, String password, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -56,7 +58,7 @@ public class User {
         return password;
     }
 
-    public Collection<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
@@ -80,7 +82,7 @@ public class User {
         this.password = password;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 }
