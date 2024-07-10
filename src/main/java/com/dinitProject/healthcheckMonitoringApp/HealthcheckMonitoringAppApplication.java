@@ -10,4 +10,18 @@ public class HealthcheckMonitoringAppApplication {
 		SpringApplication.run(HealthcheckMonitoringAppApplication.class, args);
 	}
 
+/*
+	@Bean
+	public CommandLineRunner commandLineRunner(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+		return args -> {
+			Role adminRole = roleRepository.findByName("ADMIN").orElse(null);
+			Role userRole = roleRepository.findByName("USER").orElse(null);
+
+			userRepository.save(new User("admin", "admin",
+					"admin", passwordEncoder.encode("admin"), List.of(adminRole)));
+			userRepository.save(new User("user", "user",
+					"user", passwordEncoder.encode("user"), List.of(userRole)));
+		};
+	}*/
+
 }

@@ -7,12 +7,18 @@ import java.util.Collection;
 @Entity
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Collection<User> users;
+
+    public Role() {}
+
+    public Role(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;

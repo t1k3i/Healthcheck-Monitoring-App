@@ -9,17 +9,15 @@ import java.util.Collection;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String firstName;
     private String lastName;
     private String username;
     private String password;
-    private boolean enabled;
-    private boolean tokenExpired;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(
@@ -27,6 +25,16 @@ public class User {
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
+
+    public User() {}
+
+    public User(String firstName, String lastName, String username, String password, Collection<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
 
     public Long getId() {
         return id;
@@ -46,14 +54,6 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public boolean isTokenExpired() {
-        return tokenExpired;
     }
 
     public Collection<Role> getRoles() {
@@ -78,14 +78,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public void setTokenExpired(boolean tokenExpired) {
-        this.tokenExpired = tokenExpired;
     }
 
     public void setRoles(Collection<Role> roles) {
