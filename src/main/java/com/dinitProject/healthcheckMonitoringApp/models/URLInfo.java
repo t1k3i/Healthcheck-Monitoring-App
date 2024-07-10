@@ -3,6 +3,7 @@ package com.dinitProject.healthcheckMonitoringApp.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "urlinfo")
@@ -15,6 +16,16 @@ public class URLInfo {
     private Integer status;
     private LocalDateTime lastChecked;
     private Boolean healthy;
+
+    @ManyToMany(cascade = {
+                CascadeType.PERSIST,
+                CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "urlinfo_alertmail",
+            joinColumns = @JoinColumn(name = "urlinfo_id"),
+            inverseJoinColumns = @JoinColumn(name = "alertmail_id")
+    )
+    private Set<AlertMail> alertMails;
 
     public URLInfo() {}
 
@@ -47,6 +58,10 @@ public class URLInfo {
         return healthy;
     }
 
+    public Set<AlertMail> getAlertMails() {
+        return alertMails;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -71,6 +86,10 @@ public class URLInfo {
         this.healthy = healthy;
     }
 
+    public void setAlertMails(Set<AlertMail> alertMails) {
+        this.alertMails = alertMails;
+    }
+
     @Override
     public String toString() {
         return "URLInfo{" +
@@ -80,6 +99,7 @@ public class URLInfo {
                 ", status=" + status +
                 ", lastChecked=" + lastChecked +
                 ", healthy=" + healthy +
+                ", alertMails=" + alertMails +
                 '}';
     }
 }
