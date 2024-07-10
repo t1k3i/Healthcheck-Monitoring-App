@@ -9,8 +9,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -40,16 +42,31 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(expressionInterceptUrlRegistry -> expressionInterceptUrlRegistry
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                                .requestMatchers("/urls").permitAll()
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(expressionInterceptUrlRegistry -> expressionInterceptUrlRegistry
+                                .requestMatchers(HttpMethod.DELETE, "/urls").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/urls/{id:[0-9]+}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/urls").hasRole("USER")
-                                .requestMatchers("/urls/{id:[0-9]+}").hasRole("USER")
                                 .requestMatchers(HttpMethod.PUT, "/urls/{id:[0-9]+}").hasRole("USER")
-                                .anyRequest().hasRole("ADMIN"))
+                                .requestMatchers("/urls/{id:[0-9]+}").hasRole("USER")
+                                .requestMatchers(getOpenedResources()).permitAll()
+                                .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults());
         http.addFilterAfter(customFilter, BasicAuthenticationFilter.class);
         return http.build();
+    }
+
+    private String[] getOpenedResources() {
+        return new String[]{
+                "/swagger-ui/**",
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/v3/api-docs",
+                "/v3/api-docs/**",
+                "/urls"
+        };
     }
 
 }

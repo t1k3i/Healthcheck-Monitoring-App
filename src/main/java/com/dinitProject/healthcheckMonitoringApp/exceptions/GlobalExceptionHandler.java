@@ -11,12 +11,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
-        return new ResponseEntity<>(ex,ex.getHttpStatus());
+        return new ResponseEntity<>(ex.getMessage(), ex.getHttpStatus());
     }
 
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<Object> handleConflictException(ConflictException ex) {
-        return new ResponseEntity<>(ex, ex.getHttpStatus());
+        return new ResponseEntity<>(ex.getMessage(), ex.getHttpStatus());
     }
 
     /* @ExceptionHandler(RuntimeException.class)
