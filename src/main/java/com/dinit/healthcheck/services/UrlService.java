@@ -120,7 +120,7 @@ public class UrlService {
             int responseCode = con.getResponseCode();
             con.disconnect();
             return responseCode;
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | ClassCastException e1) {
             logger.info("Url not valid");
             return -1;
         }
