@@ -1,5 +1,6 @@
 package com.dinit.healthcheck.services;
 
+import com.dinit.healthcheck.models.AlertMail;
 import com.dinit.healthcheck.models.URLInfo;
 import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,13 +9,16 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class HealthCheckJob {
     private final UrlService urlService;
+    private final EmailService emailService;
 
-    public HealthCheckJob(UrlService urlService) {
+    public HealthCheckJob(UrlService urlService, EmailService emailService) {
         this.urlService = urlService;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -26,13 +30,30 @@ public class HealthCheckJob {
             boolean oldHealthy = url.isHealthy();
             int newStatus = urlService.getStatusFromUrl(url.getUrl());
             boolean newHealthy = urlService.checkIfHealthy(url.getUrl(), newStatus);
-            //Set<AlertMail> listOfMails = url.getAlertMails();
+            Set<AlertMail> listOfMails = url.getAlertMails();
             url.setStatus(newStatus);
             url.setHealthy(newHealthy);
             url.setLastChecked(LocalDateTime.now());
-            if (oldStatus != newStatus || oldHealthy != newHealthy) {
-                System.out.println("Change!!!!!"); //TODO
+            if (stateChanged(oldStatus, newStatus, oldHealthy, newHealthy) &&
+                    !newHealthy && !listOfMails.isEmpty()) {
+                sendMail(url, listOfMails);
             }
         }
     }
+
+    private boolean stateChanged(int oldStatus, int newStatus,
+                                 boolean oldHealthy, boolean newHealthy) {
+        return oldStatus != newStatus || oldHealthy != newHealthy;
+    }
+
+    private void sendMail(URLInfo url, Set<AlertMail> listOfMails) {
+        for (AlertMail alertMail : listOfMails) {
+            String gmail = alertMail.getMail();
+            String subject = "Health Check fail";
+            String body = url.getDisplayName() + " just became unhealthy!!!\n" +
+                    "(" + url.getUrl() + ")";
+            emailService.sendEmail(gmail, subject, body);
+        }
+    }
+
 }
