@@ -10,13 +10,16 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Service
-public class HealthCheckJob {
+public class HealthCheckJobService {
     private final UrlService urlService;
     private final EmailService emailService;
 
-    public HealthCheckJob(UrlService urlService, EmailService emailService) {
+    Logger logger = Logger.getLogger(getClass().getName());
+
+    public HealthCheckJobService(UrlService urlService, EmailService emailService) {
         this.urlService = urlService;
         this.emailService = emailService;
     }
@@ -37,6 +40,7 @@ public class HealthCheckJob {
             if (stateChanged(oldStatus, newStatus, oldHealthy, newHealthy) &&
                     !newHealthy && !listOfMails.isEmpty()) {
                 sendMail(url, listOfMails);
+                logger.info("Emails sent");
             }
         }
     }
