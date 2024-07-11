@@ -18,6 +18,11 @@ public class SecurityConfiguration {
     private final CustomFilter customFilter;
     private final UserDetailsService userDetailsService;
 
+    private static final String URL_ENDPOINT = "/urls";
+    private static final String URL_ENDPOINT_EX = "/{id:[0-9]+}";
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String ROLE_USER = "USER";
+
     public SecurityConfiguration(RestAuthenticationEntryPoint authenticationEntryPoint,
                                  CustomFilter customFilter, UserDetailsService userDetailsService) {
         this.authenticationEntryPoint = authenticationEntryPoint;
@@ -30,10 +35,10 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(expressionInterceptUrlRegistry -> expressionInterceptUrlRegistry
-                                .requestMatchers(HttpMethod.DELETE, "/urls").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/urls/{id:[0-9]+}").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/urls").hasAnyAuthority("USER", "ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/urls/{id:[0-9]+}").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT).hasAuthority(ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT + URL_ENDPOINT_EX).hasAuthority(ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.POST, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + URL_ENDPOINT_EX).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 .requestMatchers(getOpenedResources()).permitAll()
                                 .anyRequest().permitAll())
                 .userDetailsService(userDetailsService)
@@ -50,8 +55,8 @@ public class SecurityConfiguration {
                 "/swagger-resources/**",
                 "/v3/api-docs",
                 "/v3/api-docs/**",
-                "/urls",
-                "/urls/{id:[0-9]+}"
+                URL_ENDPOINT,
+                URL_ENDPOINT + URL_ENDPOINT_EX
         };
     }
 

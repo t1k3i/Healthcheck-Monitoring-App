@@ -26,7 +26,7 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 
 @ExtendWith(MockitoExtension.class)
-public class ServiceTest {
+class UrlServiceTest {
 
     @Mock
     private UrlRepository urlRepository;
@@ -35,7 +35,7 @@ public class ServiceTest {
     private UrlService urlService;
 
     @Test
-    public void testGetUrls() {
+    void testGetUrls() {
         //Arrange
         List<URLInfo> urlInfos =
                 List.of(new URLInfo("http://example.com", "Example"),
@@ -57,7 +57,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void testGetUrl_Successful() {
+    void testGetUrl_Successful() {
         //Arrange
         URLInfo newMockUrlInfo = new URLInfo("http://example.com","Example");
         when(urlRepository.findById(1L)).thenReturn(Optional.of(newMockUrlInfo));
@@ -85,7 +85,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void testDeleteUrl_Successful() {
+    void testDeleteUrl_Successful() {
         //Arrange
         when(urlRepository.existsById(1L)).thenReturn(true);
 
@@ -97,7 +97,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void testDeleteUrl_Fail() {
+    void testDeleteUrl_Fail() {
         //Arrange
         when(urlRepository.existsById(1L)).thenReturn(false);
 
@@ -114,7 +114,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void testAddUrlInfo_Successful() {
+    void testAddUrlInfo_Successful() {
         //Arrange
         UrlDtoAdd urlDtoAdd = new UrlDtoAdd("http://example.com", "Example");
 
@@ -131,7 +131,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void testAddUrlInfo_Fail1() {
+    void testAddUrlInfo_Fail1() {
         UrlDtoAdd urlDtoAdd = new UrlDtoAdd("http://example.com", "Example");
         URLInfo url = UrlDtoAdd.toEntity(urlDtoAdd);
 
@@ -148,7 +148,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void testAddUrlInfo_Fail2() {
+    void testAddUrlInfo_Fail2() {
         UrlDtoAdd urlDtoAdd = new UrlDtoAdd("http://example.com", "Example");
         URLInfo url = UrlDtoAdd.toEntity(urlDtoAdd);
 
@@ -166,7 +166,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void testUpdateDisplayName_Success() {
+    void testUpdateDisplayName_Success() {
         // Arrange
         Long urlId = 1L;
         UrlUpdateDto newUrlInfo = new UrlUpdateDto("New Display Name", "http://newurl.com");
@@ -185,7 +185,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void testUpdateDisplayName_Fail1() {
+    void testUpdateDisplayName_Fail1() {
         // Arrange
         Long urlId = 1L;
         UrlUpdateDto newUrlInfo = new UrlUpdateDto("New Display Name", "http://newurl.com");
@@ -205,7 +205,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void testUpdateDisplayName_DisplayNameConflict() {
+    void testUpdateDisplayName_DisplayNameConflict() {
         // Arrange
         Long urlId = 1L;
         UrlUpdateDto newUrlInfo = new UrlUpdateDto("http://newurl.com", "New Display Name");
@@ -227,7 +227,7 @@ public class ServiceTest {
     }
 
     @Test
-    public void testUpdateDisplayName_UrlConflict() {
+    void testUpdateDisplayName_UrlConflict() {
         // Arrange
         Long urlId = 1L;
         UrlUpdateDto newUrlInfo = new UrlUpdateDto("http://newurl.com", "New Display Name");

@@ -19,12 +19,15 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class UrlService {
 
     private final UrlRepository urlRepository;
     private final RestClient restClient;
+
+    Logger logger = Logger.getLogger(getClass().getName());
 
     public UrlService(UrlRepository urlRepository) {
         this.urlRepository = urlRepository;
@@ -101,7 +104,7 @@ public class UrlService {
             con.disconnect();
             return responseCode;
         } catch (URISyntaxException e) {
-            System.out.println("Url not valid");
+            logger.info("Url not valid");
             return -1;
         }
     }
@@ -119,7 +122,7 @@ public class UrlService {
         try {
             jsonObject = new JSONObject(result);
         } catch (JSONException e) {
-            System.out.println("Not the right json structure");
+            logger.info("Not the right json structure");
             return false;
         }
 
