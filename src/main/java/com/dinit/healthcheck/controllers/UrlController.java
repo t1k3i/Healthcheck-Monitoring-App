@@ -1,5 +1,6 @@
 package com.dinit.healthcheck.controllers;
 
+import com.dinit.healthcheck.dtos.EmailDto;
 import com.dinit.healthcheck.dtos.UrlDtoAdd;
 import com.dinit.healthcheck.dtos.UrlDtoGet;
 import com.dinit.healthcheck.dtos.UrlUpdateDto;
@@ -25,13 +26,13 @@ public class UrlController {
     }
 
     @GetMapping("/{urlId}")
-    public UrlDtoGet getUrl(@PathVariable("urlId") Long userId) {
-        return urlService.getUrl(userId);
+    public UrlDtoGet getUrl(@PathVariable("urlId") Long urlId) {
+        return urlService.getUrl(urlId);
     }
 
     @DeleteMapping("/{urlId}")
-    public void deleteUrl(@PathVariable("urlId") Long userId) {
-        urlService.deleteUrl(userId);
+    public void deleteUrl(@PathVariable("urlId") Long urlId) {
+        urlService.deleteUrl(urlId);
     }
 
     @DeleteMapping()
@@ -49,6 +50,11 @@ public class UrlController {
             @PathVariable("urlId") Long urlId,
             @Valid @RequestBody UrlUpdateDto urlInfo) {
         urlService.updateDisplayName(urlId, urlInfo);
+    }
+
+    @PutMapping("/{urlId}/addEmail")
+    public void addEmailToUrlInfo(@PathVariable("urlId") Long urlId, @Valid @RequestBody EmailDto emailDto) {
+        urlService.addEmailToUrlInfo(urlId, emailDto.getEmail());
     }
 
 }

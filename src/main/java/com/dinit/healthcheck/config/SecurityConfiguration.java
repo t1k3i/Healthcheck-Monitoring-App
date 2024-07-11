@@ -39,6 +39,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT + URL_ENDPOINT_EX).hasAuthority(ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.POST, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + URL_ENDPOINT_EX).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + URL_ENDPOINT_EX + "/addEmail")
+                                .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 .requestMatchers(getOpenedResources()).permitAll()
                                 .anyRequest().permitAll())
                 .userDetailsService(userDetailsService)

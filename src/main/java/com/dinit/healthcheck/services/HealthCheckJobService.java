@@ -29,15 +29,15 @@ public class HealthCheckJobService {
     public void updateDB() throws IOException {
         List<URLInfo> urls = urlService.getFullUrls();
         for (URLInfo url : urls) {
-            int oldStatus = url.getStatus();
-            boolean oldHealthy = url.isHealthy();
+            Integer oldStatus = url.getStatus();
+            Boolean oldHealthy = url.isHealthy();
             int newStatus = urlService.getStatusFromUrl(url.getUrl());
             boolean newHealthy = urlService.checkIfHealthy(url.getUrl(), newStatus);
             Set<AlertMail> listOfMails = url.getAlertMails();
             url.setStatus(newStatus);
             url.setHealthy(newHealthy);
             url.setLastChecked(LocalDateTime.now());
-            if (stateChanged(oldStatus, newStatus, oldHealthy, newHealthy) &&
+            if ((isNull(oldStatus, oldHealthy) || stateChanged(oldStatus, newStatus, oldHealthy, newHealthy)) &&
                     !newHealthy && !listOfMails.isEmpty()) {
                 sendMail(url, listOfMails);
                 logger.info("Emails sent");
@@ -45,9 +45,13 @@ public class HealthCheckJobService {
         }
     }
 
-    private boolean stateChanged(int oldStatus, int newStatus,
-                                 boolean oldHealthy, boolean newHealthy) {
-        return oldStatus != newStatus || oldHealthy != newHealthy;
+    private boolean stateChanged(Integer oldStatus, int newStatus,
+                                 Boolean oldHealthy, boolean newHealthy) {
+        return (oldStatus != newStatus || oldHealthy != newHealthy);
+    }
+
+    private boolean isNull(Integer oldStatus, Boolean oldHealthy) {
+        return oldStatus == null || oldHealthy == null;
     }
 
     private void sendMail(URLInfo url, Set<AlertMail> listOfMails) {

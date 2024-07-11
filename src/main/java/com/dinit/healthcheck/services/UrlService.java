@@ -5,8 +5,10 @@ import com.dinit.healthcheck.dtos.UrlDtoGet;
 import com.dinit.healthcheck.dtos.UrlResponseDto;
 import com.dinit.healthcheck.dtos.UrlUpdateDto;
 import com.dinit.healthcheck.exceptions.conflict.DisplayNameConflictException;
+import com.dinit.healthcheck.exceptions.conflict.EmailConflictException;
 import com.dinit.healthcheck.exceptions.conflict.UrlConflictException;
 import com.dinit.healthcheck.exceptions.notfound.UrlNotFoundException;
+import com.dinit.healthcheck.models.AlertMail;
 import com.dinit.healthcheck.models.URLInfo;
 import com.dinit.healthcheck.repositorys.UrlRepository;
 import jakarta.transaction.Transactional;
@@ -94,6 +96,21 @@ public class UrlService {
         urlInfo.setDisplayName(newDisplayName);
         if (newUrl != null)
             urlInfo.setUrl(newUrl);
+    }
+
+    @Transactional
+    public void addEmailToUrlInfo(Long urlId, String email) {
+        URLInfo urlInfo = urlRepository.findByIdWithAlertMails(urlId).orElse(null);
+        if (urlInfo == null)
+            throw new UrlNotFoundException();
+        AlertMail alertMail = new AlertMail(email);
+        if (emailExists(alertMail, urlInfo))
+            throw new EmailConflictException();
+        urlInfo.getAlertMails().add(alertMail);
+    }
+
+    private boolean emailExists(AlertMail alertMail, URLInfo urlInfo) {
+        return urlInfo.getAlertMails().contains(alertMail);
     }
 
     public int getStatusFromUrl(String urlText) throws IOException {
