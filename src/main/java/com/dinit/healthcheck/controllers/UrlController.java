@@ -1,9 +1,6 @@
 package com.dinit.healthcheck.controllers;
 
-import com.dinit.healthcheck.dtos.EmailDto;
-import com.dinit.healthcheck.dtos.UrlDtoAdd;
-import com.dinit.healthcheck.dtos.UrlDtoGet;
-import com.dinit.healthcheck.dtos.UrlUpdateDto;
+import com.dinit.healthcheck.dtos.*;
 import com.dinit.healthcheck.services.UrlService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;

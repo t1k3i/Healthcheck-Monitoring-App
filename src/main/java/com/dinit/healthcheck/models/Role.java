@@ -11,8 +11,6 @@ public class Role {
     private Long id;
 
     private String name;
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private Set<User> users;
 
     public Role() {}
 
@@ -28,10 +26,6 @@ public class Role {
         return name;
     }
 
-    public Set<User> getUsers() {
-        return users;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -40,7 +34,4 @@ public class Role {
         this.name = name;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
 }

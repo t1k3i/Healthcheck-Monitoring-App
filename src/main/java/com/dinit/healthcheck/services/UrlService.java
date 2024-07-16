@@ -1,9 +1,6 @@
 package com.dinit.healthcheck.services;
 
-import com.dinit.healthcheck.dtos.UrlDtoAdd;
-import com.dinit.healthcheck.dtos.UrlDtoGet;
-import com.dinit.healthcheck.dtos.UrlResponseDto;
-import com.dinit.healthcheck.dtos.UrlUpdateDto;
+import com.dinit.healthcheck.dtos.*;
 import com.dinit.healthcheck.exceptions.conflict.DisplayNameConflictException;
 import com.dinit.healthcheck.exceptions.conflict.EmailConflictException;
 import com.dinit.healthcheck.exceptions.conflict.UrlConflictException;

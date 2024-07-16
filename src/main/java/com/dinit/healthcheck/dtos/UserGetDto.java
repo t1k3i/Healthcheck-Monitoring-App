@@ -1,38 +1,24 @@
-package com.dinit.healthcheck.models;
+package com.dinit.healthcheck.dtos;
 
-import jakarta.persistence.*;
+import com.dinit.healthcheck.models.Role;
 
 import java.util.Set;
 
-@Entity
-@Table(name = "usertable")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class UserGetDto {
     private String firstName;
     private String lastName;
     private String username;
     private String password;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
     private Role role;
 
-    public User() {}
+    public UserGetDto() {}
 
-    public User(String firstName, String lastName, String username, String password, Role role) {
+    public UserGetDto(String firstName, String lastName, String username, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.role = role;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getFirstName() {
@@ -55,10 +41,6 @@ public class User {
         return role;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -75,7 +57,7 @@ public class User {
         this.password = password;
     }
 
-    public void setRole(Role role) {
+    public void setRoles(Role role) {
         this.role = role;
     }
 
