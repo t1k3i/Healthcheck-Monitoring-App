@@ -2,8 +2,6 @@ package com.dinit.healthcheck.dtos;
 
 import com.dinit.healthcheck.models.Role;
 
-import java.util.Set;
-
 public class UserGetDto {
     private String firstName;
     private String lastName;
