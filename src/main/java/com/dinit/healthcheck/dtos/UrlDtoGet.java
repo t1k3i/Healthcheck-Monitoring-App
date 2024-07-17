@@ -7,11 +7,17 @@ public class UrlDtoGet {
     private String url;
     private String displayName;
     private Boolean healthy;
+    private Long id;
 
-    public UrlDtoGet(String url, String displayName, Boolean healthy) {
+    public UrlDtoGet(String url, String displayName, Boolean healthy, Long id) {
+        this.id = id;
         this.url = url;
         this.displayName = displayName;
         this.healthy = healthy;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getUrl() {
@@ -38,6 +44,10 @@ public class UrlDtoGet {
         this.healthy = healthy;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "UrlDtoGet{" +
@@ -48,7 +58,7 @@ public class UrlDtoGet {
     }
 
     public static UrlDtoGet toUrlDto(URLInfo urlInfo) {
-        return new UrlDtoGet(urlInfo.getUrl(), urlInfo.getDisplayName(), urlInfo.isHealthy());
+        return new UrlDtoGet(urlInfo.getUrl(), urlInfo.getDisplayName(), urlInfo.isHealthy(), urlInfo.getId());
     }
 
 }
