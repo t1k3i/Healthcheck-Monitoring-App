@@ -1,5 +1,6 @@
 package com.dinit.healthcheck.repositorys;
 
+import com.dinit.healthcheck.models.AlertMail;
 import com.dinit.healthcheck.models.URLInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +21,8 @@ public interface UrlRepository extends JpaRepository<URLInfo, Long> {
 
     @Query("SELECT u FROM URLInfo u LEFT JOIN FETCH u.alertMails WHERE u.id = :urlId")
     Optional<URLInfo> findByIdWithAlertMails(@Param("urlId") Long urlId);
+
+    @Query("SELECT am FROM AlertMail am JOIN FETCH am.urlInfos u WHERE u.id = :urlId")
+    Optional<List<AlertMail>> findAlertMailsByUrlId(@Param("urlId") Long urlId);
 
 }

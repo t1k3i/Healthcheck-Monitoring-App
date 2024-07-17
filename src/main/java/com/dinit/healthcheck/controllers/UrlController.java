@@ -27,6 +27,11 @@ public class UrlController {
         return urlService.getUrl(urlId);
     }
 
+    @GetMapping("/{urlId}/getEmails")
+    public List<EmailDto> getEmails(@PathVariable("urlId") Long urlId) {
+        return urlService.getEmails(urlId);
+    }
+
     @DeleteMapping("/{urlId}")
     public void deleteUrl(@PathVariable("urlId") Long urlId) {
         urlService.deleteUrl(urlId);

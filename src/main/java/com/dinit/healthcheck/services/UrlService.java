@@ -106,6 +106,16 @@ public class UrlService {
         urlInfo.getAlertMails().add(alertMail);
     }
 
+    public List<EmailDto> getEmails(Long urlId) {
+        List<AlertMail> list = urlRepository.findAlertMailsByUrlId(urlId)
+                .orElseThrow(UrlNotFoundException::new);
+        List<EmailDto> list2 = new ArrayList<>();
+        for (AlertMail alertMail : list) {
+            list2.add(new EmailDto(alertMail.getMail()));
+        }
+        return list2;
+    }
+
     private boolean emailExists(AlertMail alertMail, URLInfo urlInfo) {
         return urlInfo.getAlertMails().contains(alertMail);
     }
@@ -144,4 +154,5 @@ public class UrlService {
         return urlResponseDto.getStatus().equals("Healthy") &&
                 status == HttpURLConnection.HTTP_OK;
     }
+
 }
