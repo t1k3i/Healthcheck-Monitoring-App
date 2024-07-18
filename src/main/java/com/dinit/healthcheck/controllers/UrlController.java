@@ -28,6 +28,11 @@ public class UrlController {
         return urlService.getUrl(urlId);
     }
 
+    @GetMapping("/search")
+    public List<UrlDtoGet> searchUrls(@RequestParam String query) {
+        return urlService.searchUrls(query);
+    }
+
     @DeleteMapping("/{urlId}")
     public void deleteUrl(@PathVariable("urlId") Long urlId) {
         urlService.deleteUrl(urlId);

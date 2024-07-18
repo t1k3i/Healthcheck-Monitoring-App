@@ -64,6 +64,7 @@ public class SecurityConfiguration {
                 "/v3/api-docs/**",
                 URL_ENDPOINT,
                 URL_ENDPOINT + URL_ENDPOINT_EX,
+                URL_ENDPOINT + "/search",
                 "/users/authenticate"
         };
     }

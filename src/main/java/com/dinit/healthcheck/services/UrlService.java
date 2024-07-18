@@ -55,6 +55,13 @@ public class UrlService {
         return UrlDtoGet.toUrlDto(urlInfo);
     }
 
+    public List<UrlDtoGet> searchUrls(String query) {
+        return this.urlRepository.findByUrlContainingOrDisplayNameContaining(query, query)
+                .stream()
+                .map(UrlDtoGet::toUrlDto)
+                .toList();
+    }
+
     public void deleteUrl(Long urlId) {
         if (!urlRepository.existsById(urlId))
             throw new UrlNotFoundException();

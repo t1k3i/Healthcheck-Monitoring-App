@@ -25,4 +25,6 @@ public interface UrlRepository extends JpaRepository<URLInfo, Long> {
     @Query("SELECT am FROM AlertMail am JOIN FETCH am.urlInfos u WHERE u.id = :urlId")
     List<AlertMail> findAlertMailsByUrlId(@Param("urlId") Long urlId);
 
+    List<URLInfo> findByUrlContainingOrDisplayNameContaining(String urlKeyword, String displayNameKeyword);
+
 }
