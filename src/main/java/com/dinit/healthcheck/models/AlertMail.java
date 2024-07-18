@@ -1,5 +1,6 @@
 package com.dinit.healthcheck.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -13,7 +14,8 @@ public class AlertMail {
     private Long id;
     private String mail;
 
-    @ManyToMany(mappedBy = "alertMails")
+    @ManyToMany(mappedBy = "alertMails", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @JsonBackReference
     private Set<URLInfo> urlInfos;
 
     public AlertMail() {}

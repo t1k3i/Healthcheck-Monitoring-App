@@ -1,6 +1,7 @@
 package com.dinit.healthcheck.dtos;
 
 import com.dinit.healthcheck.models.Role;
+import com.dinit.healthcheck.models.User;
 
 public class UserGetDto {
     private String firstName;
@@ -57,6 +58,10 @@ public class UserGetDto {
 
     public void setRoles(Role role) {
         this.role = role;
+    }
+
+    public static UserGetDto toDto(User user) {
+        return new UserGetDto(user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword(), user.getRole());
     }
 
 }

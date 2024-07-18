@@ -5,11 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class EmailDto {
+public class EmailAddDto {
 
-    private Long id;
-    @NotNull(message = "Url can not be null")
-    @NotEmpty(message = "Url can not be empty")
+    @NotNull(message = "Email can not be null")
+    @NotEmpty(message = "Email can not be empty")
     @Size(min = 1, max = 255)
     @Pattern(
             regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" +
@@ -18,24 +17,12 @@ public class EmailDto {
     )
     private String email;
 
-    public EmailDto(Long id, String email) {
-        this.id = id;
-        this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
+
 }

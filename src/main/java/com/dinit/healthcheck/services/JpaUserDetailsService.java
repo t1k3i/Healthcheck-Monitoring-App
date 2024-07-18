@@ -36,8 +36,7 @@ public class JpaUserDetailsService implements UserDetailsService {
         if (user.isEmpty())
             throw new UsernameNotFoundException("Username not found");
         if (passwordEncoder.matches(userAddDto.getPassword(), user.get().getPassword()))
-            return new UserGetDto(user.get().getFirstName(), user.get().getLastName(),
-                    user.get().getUsername(), user.get().getPassword(), user.get().getRole());
+            return UserGetDto.toDto(user.get());
         throw new UsernameNotFoundException("Wrong password");
     }
 }

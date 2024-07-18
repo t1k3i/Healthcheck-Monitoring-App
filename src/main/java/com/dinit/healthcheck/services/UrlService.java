@@ -4,9 +4,11 @@ import com.dinit.healthcheck.dtos.*;
 import com.dinit.healthcheck.exceptions.conflict.DisplayNameConflictException;
 import com.dinit.healthcheck.exceptions.conflict.EmailConflictException;
 import com.dinit.healthcheck.exceptions.conflict.UrlConflictException;
+import com.dinit.healthcheck.exceptions.notfound.EmailNotFoundException;
 import com.dinit.healthcheck.exceptions.notfound.UrlNotFoundException;
 import com.dinit.healthcheck.models.AlertMail;
 import com.dinit.healthcheck.models.URLInfo;
+import com.dinit.healthcheck.repositorys.AlertMailRepository;
 import com.dinit.healthcheck.repositorys.UrlRepository;
 import jakarta.transaction.Transactional;
 import org.json.JSONException;
@@ -16,20 +18,21 @@ import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Service
 public class UrlService {
 
     private final UrlRepository urlRepository;
+    private final AlertMailRepository alertMailRepository;
     private final RestClient restClient;
 
     Logger logger = Logger.getLogger(getClass().getName());
 
-    public UrlService(UrlRepository urlRepository) {
+    public UrlService(UrlRepository urlRepository, AlertMailRepository alertMailRepository) {
         this.urlRepository = urlRepository;
+        this.alertMailRepository = alertMailRepository;
         this.restClient = RestClient.builder().build();
     }
 
@@ -100,24 +103,45 @@ public class UrlService {
         URLInfo urlInfo = urlRepository.findByIdWithAlertMails(urlId).orElse(null);
         if (urlInfo == null)
             throw new UrlNotFoundException();
-        AlertMail alertMail = new AlertMail(email);
+        AlertMail alertMail = alertMailRepository.findByMail(email).orElse(new AlertMail(email));
         if (emailExists(alertMail, urlInfo))
             throw new EmailConflictException();
         urlInfo.getAlertMails().add(alertMail);
     }
 
     public List<EmailDto> getEmails(Long urlId) {
-        List<AlertMail> list = urlRepository.findAlertMailsByUrlId(urlId)
-                .orElseThrow(UrlNotFoundException::new);
-        List<EmailDto> list2 = new ArrayList<>();
-        for (AlertMail alertMail : list) {
-            list2.add(new EmailDto(alertMail.getMail()));
+        if (!urlRepository.existsById(urlId))
+            throw new UrlNotFoundException();
+        List<AlertMail> alertMails = urlRepository.findAlertMailsByUrlId(urlId);
+        List<EmailDto> emailDtos = new ArrayList<>();
+        for (AlertMail alertMail : alertMails) {
+            emailDtos.add(new EmailDto(alertMail.getId(), alertMail.getMail()));
         }
-        return list2;
+        return emailDtos;
     }
 
     private boolean emailExists(AlertMail alertMail, URLInfo urlInfo) {
-        return urlInfo.getAlertMails().contains(alertMail);
+        Set<AlertMail> conn = urlInfo.getAlertMails();
+        String name = alertMail.getMail();
+        for (AlertMail mail : conn) {
+            if (mail.getMail().equals(name))
+                return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    public void deleteEmail(Long urlId, Long emailId) {
+        URLInfo urlInfo = urlRepository.findById(urlId).orElse(null);
+        if (urlInfo == null)
+            throw new UrlNotFoundException();
+        AlertMail alertMail = alertMailRepository.findById(emailId).orElse(null);
+        if (alertMail == null)
+            throw new EmailNotFoundException();
+        if (!urlInfo.getAlertMails().contains(alertMail))
+            throw new EmailNotFoundException();
+        urlInfo.getAlertMails().remove(alertMail);
+        alertMail.getUrlInfos().remove(urlInfo);
     }
 
     public int getStatusFromUrl(String urlText) throws IOException {
@@ -154,5 +178,4 @@ public class UrlService {
         return urlResponseDto.getStatus().equals("Healthy") &&
                 status == HttpURLConnection.HTTP_OK;
     }
-
 }

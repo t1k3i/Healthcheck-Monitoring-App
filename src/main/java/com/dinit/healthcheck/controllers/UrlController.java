@@ -1,6 +1,7 @@
 package com.dinit.healthcheck.controllers;
 
 import com.dinit.healthcheck.dtos.*;
+import com.dinit.healthcheck.models.URLInfo;
 import com.dinit.healthcheck.services.UrlService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +28,6 @@ public class UrlController {
         return urlService.getUrl(urlId);
     }
 
-    @GetMapping("/{urlId}/getEmails")
-    public List<EmailDto> getEmails(@PathVariable("urlId") Long urlId) {
-        return urlService.getEmails(urlId);
-    }
-
     @DeleteMapping("/{urlId}")
     public void deleteUrl(@PathVariable("urlId") Long urlId) {
         urlService.deleteUrl(urlId);
@@ -54,9 +50,9 @@ public class UrlController {
         urlService.updateDisplayName(urlId, urlInfo);
     }
 
-    @PutMapping("/{urlId}/addEmail")
-    public void addEmailToUrlInfo(@PathVariable("urlId") Long urlId, @Valid @RequestBody EmailDto emailDto) {
-        urlService.addEmailToUrlInfo(urlId, emailDto.getEmail());
+    @GetMapping("/test")
+    public List<URLInfo> getUrlsTest() {
+        return urlService.getFullUrls();
     }
 
 }

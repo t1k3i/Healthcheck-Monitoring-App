@@ -19,6 +19,7 @@ public class SecurityConfiguration {
     private final UserDetailsService userDetailsService;
 
     private static final String URL_ENDPOINT = "/urls";
+    private static final String URL_ENDPOINT_EMAILS = "/email";
     private static final String URL_ENDPOINT_EX = "/{id:[0-9]+}";
     private static final String ROLE_ADMIN = "ADMIN";
     private static final String ROLE_USER = "USER";
@@ -39,7 +40,11 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT + URL_ENDPOINT_EX).hasAuthority(ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.POST, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + URL_ENDPOINT_EX).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + URL_ENDPOINT_EX + "/addEmail")
+                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT_EMAILS + URL_ENDPOINT_EX + "/emails")
+                                .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.GET, URL_ENDPOINT_EMAILS + URL_ENDPOINT_EX + "/emails")
+                                .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT_EMAILS + URL_ENDPOINT_EX + "/emails/**")
                                 .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 .requestMatchers(getOpenedResources()).permitAll()
                                 .anyRequest().permitAll())

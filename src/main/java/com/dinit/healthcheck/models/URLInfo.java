@@ -1,5 +1,6 @@
 package com.dinit.healthcheck.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -17,14 +18,13 @@ public class URLInfo {
     private LocalDateTime lastChecked;
     private Boolean healthy;
 
-    @ManyToMany(cascade = {
-                CascadeType.PERSIST,
-                CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "urlinfo_alertmail",
             joinColumns = @JoinColumn(name = "urlinfo_id"),
             inverseJoinColumns = @JoinColumn(name = "alertmail_id")
     )
+    @JsonManagedReference
     private Set<AlertMail> alertMails;
 
     public URLInfo() {}

@@ -23,6 +23,6 @@ public interface UrlRepository extends JpaRepository<URLInfo, Long> {
     Optional<URLInfo> findByIdWithAlertMails(@Param("urlId") Long urlId);
 
     @Query("SELECT am FROM AlertMail am JOIN FETCH am.urlInfos u WHERE u.id = :urlId")
-    Optional<List<AlertMail>> findAlertMailsByUrlId(@Param("urlId") Long urlId);
+    List<AlertMail> findAlertMailsByUrlId(@Param("urlId") Long urlId);
 
 }
