@@ -7,9 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public class UrlUpdateDto {
 
-    @NotNull(message = "Url can not be null")
-    @NotEmpty(message = "Url can not be empty")
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     private final String displayName;
 
     @Pattern(

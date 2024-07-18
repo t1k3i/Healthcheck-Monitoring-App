@@ -89,11 +89,12 @@ public class UrlService {
             throw new UrlNotFoundException();
         String newDisplayName = newUrlInfo.getDisplayName();
         String newUrl = newUrlInfo.getUrl();
-        if (displayNameExists(newDisplayName))
+        if (newDisplayName != null && displayNameExists(newDisplayName) && !newDisplayName.equals(urlInfo.getDisplayName()))
             throw new DisplayNameConflictException();
-        if (newUrl != null && urlExists(newUrl))
+        if (newUrl != null && urlExists(newUrl) && !newUrl.equals(urlInfo.getUrl()))
             throw new UrlConflictException();
-        urlInfo.setDisplayName(newDisplayName);
+        if (newDisplayName != null)
+            urlInfo.setDisplayName(newDisplayName);
         if (newUrl != null)
             urlInfo.setUrl(newUrl);
     }
