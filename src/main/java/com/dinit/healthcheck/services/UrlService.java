@@ -174,6 +174,11 @@ public class UrlService {
                 .retrieve()
                 .body(String.class);
 
+        if (result == null) {
+            logger.info("Not a JSON response");
+            return false;
+        }
+
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(result);
