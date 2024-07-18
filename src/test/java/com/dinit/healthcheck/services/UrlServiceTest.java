@@ -7,7 +7,7 @@ import com.dinit.healthcheck.exceptions.conflict.DisplayNameConflictException;
 import com.dinit.healthcheck.exceptions.conflict.UrlConflictException;
 import com.dinit.healthcheck.exceptions.notfound.UrlNotFoundException;
 import com.dinit.healthcheck.models.URLInfo;
-import com.dinit.healthcheck.repositorys.UrlRepository;
+import com.dinit.healthcheck.repositories.UrlRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

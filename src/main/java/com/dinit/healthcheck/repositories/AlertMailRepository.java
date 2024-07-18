@@ -1,4 +1,4 @@
-package com.dinit.healthcheck.repositorys;
+package com.dinit.healthcheck.repositories;
 
 import com.dinit.healthcheck.models.AlertMail;
 import org.springframework.data.jpa.repository.JpaRepository;

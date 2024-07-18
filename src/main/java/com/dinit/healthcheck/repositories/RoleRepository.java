@@ -1,4 +1,4 @@
-package com.dinit.healthcheck.repositorys;
+package com.dinit.healthcheck.repositories;
 
 import com.dinit.healthcheck.models.Role;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -4,7 +4,7 @@ import com.dinit.healthcheck.dtos.UserAddDto;
 import com.dinit.healthcheck.dtos.UserGetDto;
 import com.dinit.healthcheck.models.SecurityUser;
 import com.dinit.healthcheck.models.User;
-import com.dinit.healthcheck.repositorys.UserRepository;
+import com.dinit.healthcheck.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
