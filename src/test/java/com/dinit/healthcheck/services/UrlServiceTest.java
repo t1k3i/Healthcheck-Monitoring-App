@@ -1,7 +1,7 @@
 package com.dinit.healthcheck.services;
 
-import com.dinit.healthcheck.dtos.UrlDtoAdd;
-import com.dinit.healthcheck.dtos.UrlDtoGet;
+import com.dinit.healthcheck.dtos.UrlAddDto;
+import com.dinit.healthcheck.dtos.UrlGetDto;
 import com.dinit.healthcheck.dtos.UrlUpdateDto;
 import com.dinit.healthcheck.exceptions.conflict.DisplayNameConflictException;
 import com.dinit.healthcheck.exceptions.conflict.UrlConflictException;
@@ -43,16 +43,16 @@ class UrlServiceTest {
 
         when(urlRepository.findAll()).thenReturn(urlInfos);
 
-        UrlDtoGet urlDtoGet1 = UrlDtoGet.toUrlDto(urlInfos.get(0));
-        UrlDtoGet urlDtoGet2 = UrlDtoGet.toUrlDto(urlInfos.get(1));
+        UrlGetDto urlGetDto1 = UrlGetDto.toUrlDto(urlInfos.get(0));
+        UrlGetDto urlGetDto2 = UrlGetDto.toUrlDto(urlInfos.get(1));
 
         //Act
-        List<UrlDtoGet> list = urlService.getUrls();
+        List<UrlGetDto> list = urlService.getUrls();
 
         //Assert
         Assertions.assertEquals(2, list.size());
-        assertEquals("", urlDtoGet1.toString(), list.get(0).toString());
-        assertEquals("", urlDtoGet2.toString(), list.get(1).toString());
+        assertEquals("", urlGetDto1.toString(), list.get(0).toString());
+        assertEquals("", urlGetDto2.toString(), list.get(1).toString());
 
     }
 
@@ -63,7 +63,7 @@ class UrlServiceTest {
         when(urlRepository.findById(1L)).thenReturn(Optional.of(newMockUrlInfo));
 
         //Act
-        UrlDtoGet result = urlService.getUrl(1L);
+        UrlGetDto result = urlService.getUrl(1L);
 
         //Assert
         assertEquals("","http://example.com", result.getUrl());
@@ -116,13 +116,13 @@ class UrlServiceTest {
     @Test
     void testAddUrlInfo_Successful() {
         //Arrange
-        UrlDtoAdd urlDtoAdd = new UrlDtoAdd("http://example.com", "Example");
+        UrlAddDto urlAddDto = new UrlAddDto("http://example.com", "Example");
 
         when(urlRepository.findByDisplayName(any())).thenReturn(Optional.empty());
         when(urlRepository.findByUrl(any())).thenReturn(Optional.empty());
 
         //Act
-        urlService.addUrlInfo(urlDtoAdd);
+        urlService.addUrlInfo(urlAddDto);
 
         //Assert
         verify(urlRepository, times(1)).findByUrl(anyString());
@@ -132,13 +132,13 @@ class UrlServiceTest {
 
     @Test
     void testAddUrlInfo_Fail1() {
-        UrlDtoAdd urlDtoAdd = new UrlDtoAdd("http://example.com", "Example");
-        URLInfo url = UrlDtoAdd.toEntity(urlDtoAdd);
+        UrlAddDto urlAddDto = new UrlAddDto("http://example.com", "Example");
+        URLInfo url = UrlAddDto.toEntity(urlAddDto);
 
         when(urlRepository.findByUrl(anyString())).thenReturn(Optional.of(url));
 
         Exception exception = assertThrows(UrlConflictException.class, () -> {
-            urlService.addUrlInfo(urlDtoAdd);
+            urlService.addUrlInfo(urlAddDto);
         });
 
         String expectedMessage = "Url already exists";
@@ -149,14 +149,14 @@ class UrlServiceTest {
 
     @Test
     void testAddUrlInfo_Fail2() {
-        UrlDtoAdd urlDtoAdd = new UrlDtoAdd("http://example.com", "Example");
-        URLInfo url = UrlDtoAdd.toEntity(urlDtoAdd);
+        UrlAddDto urlAddDto = new UrlAddDto("http://example.com", "Example");
+        URLInfo url = UrlAddDto.toEntity(urlAddDto);
 
         when(urlRepository.findByUrl(anyString())).thenReturn(Optional.empty());
         when(urlRepository.findByDisplayName(anyString())).thenReturn(Optional.of(url));
 
         Exception exception = assertThrows(DisplayNameConflictException.class, () -> {
-            urlService.addUrlInfo(urlDtoAdd);
+            urlService.addUrlInfo(urlAddDto);
         });
 
         String expectedMessage = "Display name already exists";

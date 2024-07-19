@@ -2,14 +2,14 @@ package com.dinit.healthcheck.dtos;
 
 import com.dinit.healthcheck.models.URLInfo;
 
-public class UrlDtoGet {
+public class UrlGetDto {
 
     private String url;
     private String displayName;
     private Boolean healthy;
     private Long id;
 
-    public UrlDtoGet(String url, String displayName, Boolean healthy, Long id) {
+    public UrlGetDto(String url, String displayName, Boolean healthy, Long id) {
         this.id = id;
         this.url = url;
         this.displayName = displayName;
@@ -57,8 +57,8 @@ public class UrlDtoGet {
                 '}';
     }
 
-    public static UrlDtoGet toUrlDto(URLInfo urlInfo) {
-        return new UrlDtoGet(urlInfo.getUrl(), urlInfo.getDisplayName(), urlInfo.isHealthy(), urlInfo.getId());
+    public static UrlGetDto toUrlDto(URLInfo urlInfo) {
+        return new UrlGetDto(urlInfo.getUrl(), urlInfo.getDisplayName(), urlInfo.isHealthy(), urlInfo.getId());
     }
 
 }

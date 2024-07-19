@@ -2,12 +2,12 @@ package com.dinit.healthcheck.controllers;
 
 import com.dinit.healthcheck.dtos.UserAddDto;
 import com.dinit.healthcheck.dtos.UserGetDto;
+import com.dinit.healthcheck.dtos.UserRegisterDto;
 import com.dinit.healthcheck.services.JpaUserDetailsService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "users")
@@ -19,8 +19,23 @@ public class UserController {
         this.userDetailsService = userDetailsService;
     }
 
+    @GetMapping()
+    public List<UserGetDto> getUsers() {
+        return this.userDetailsService.getUsers();
+    }
+
     @PostMapping("/authenticate")
     public UserGetDto authenticateUser(@Valid @RequestBody UserAddDto userAddDto) {
         return userDetailsService.authenticateUser(userAddDto);
+    }
+
+    @PostMapping("/register")
+    public void registerUser(@Valid @RequestBody UserRegisterDto userRegisterDto) {
+        this.userDetailsService.registerUser(userRegisterDto);
+    }
+
+    @DeleteMapping("/{urlId}")
+    public void deleteUser(@PathVariable("urlId") Long urlId) {
+        this.userDetailsService.deleteUser(urlId);
     }
 }

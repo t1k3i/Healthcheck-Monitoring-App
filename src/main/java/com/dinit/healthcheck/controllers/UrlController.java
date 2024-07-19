@@ -19,17 +19,17 @@ public class UrlController {
     }
 
     @GetMapping
-    public List<UrlDtoGet> getUrls() {
+    public List<UrlGetDto> getUrls() {
         return urlService.getUrls();
     }
 
     @GetMapping("/{urlId}")
-    public UrlDtoGet getUrl(@PathVariable("urlId") Long urlId) {
+    public UrlGetDto getUrl(@PathVariable("urlId") Long urlId) {
         return urlService.getUrl(urlId);
     }
 
     @GetMapping("/search")
-    public List<UrlDtoGet> searchUrls(@RequestParam String query) {
+    public List<UrlGetDto> searchUrls(@RequestParam String query) {
         return urlService.searchUrls(query);
     }
 
@@ -44,7 +44,7 @@ public class UrlController {
     }
 
     @PostMapping
-    public void addURLInfo(@Valid @RequestBody UrlDtoAdd urlInfo) {
+    public void addURLInfo(@Valid @RequestBody UrlAddDto urlInfo) {
         urlService.addUrlInfo(urlInfo);
     }
 

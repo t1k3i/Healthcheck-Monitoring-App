@@ -38,6 +38,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(expressionInterceptUrlRegistry -> expressionInterceptUrlRegistry
                                 .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT).hasAuthority(ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT + URL_ENDPOINT_EX).hasAuthority(ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.POST, "/users/register").hasAuthority(ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.GET, "/users").hasAuthority(ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.DELETE, "/users/{id:[0-9]+}").hasAuthority(ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.POST, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + URL_ENDPOINT_EX).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.PUT, URL_ENDPOINT_EMAILS + URL_ENDPOINT_EX + "/emails")

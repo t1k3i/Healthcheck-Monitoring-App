@@ -4,20 +4,22 @@ import com.dinit.healthcheck.models.Role;
 import com.dinit.healthcheck.models.User;
 
 public class UserGetDto {
+    private Long id;
     private String firstName;
     private String lastName;
     private String username;
-    private String password;
     private Role role;
 
-    public UserGetDto() {}
-
-    public UserGetDto(String firstName, String lastName, String username, String password, Role role) {
+    public UserGetDto(Long id, String firstName, String lastName, String username, Role role) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
-        this.password = password;
         this.role = role;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getFirstName() {
@@ -32,12 +34,12 @@ public class UserGetDto {
         return username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public Role getRole() {
         return role;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setFirstName(String firstName) {
@@ -52,16 +54,13 @@ public class UserGetDto {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setRoles(Role role) {
         this.role = role;
     }
 
     public static UserGetDto toDto(User user) {
-        return new UserGetDto(user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword(), user.getRole());
+        return new UserGetDto(user.getId(), user.getFirstName(), user.getLastName(),
+                user.getUsername(), user.getRole());
     }
 
 }

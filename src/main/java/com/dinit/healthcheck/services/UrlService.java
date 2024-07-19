@@ -36,11 +36,11 @@ public class UrlService {
         this.restClient = RestClient.builder().build();
     }
 
-    public List<UrlDtoGet> getUrls() {
-        List<UrlDtoGet> list = new ArrayList<>();
+    public List<UrlGetDto> getUrls() {
+        List<UrlGetDto> list = new ArrayList<>();
         List<URLInfo> urls = urlRepository.findAll();
         for (URLInfo urlInfo : urls)
-            list.add(UrlDtoGet.toUrlDto(urlInfo));
+            list.add(UrlGetDto.toUrlDto(urlInfo));
         return list;
     }
 
@@ -48,17 +48,17 @@ public class UrlService {
         return urlRepository.findAllWithAlertMails();
     }
 
-    public UrlDtoGet getUrl(Long id) {
+    public UrlGetDto getUrl(Long id) {
         URLInfo urlInfo = urlRepository.findById(id).orElse(null);
         if (urlInfo == null)
             throw new UrlNotFoundException();
-        return UrlDtoGet.toUrlDto(urlInfo);
+        return UrlGetDto.toUrlDto(urlInfo);
     }
 
-    public List<UrlDtoGet> searchUrls(String query) {
+    public List<UrlGetDto> searchUrls(String query) {
         return this.urlRepository.findByUrlContainingOrDisplayNameContaining(query, query)
                 .stream()
-                .map(UrlDtoGet::toUrlDto)
+                .map(UrlGetDto::toUrlDto)
                 .toList();
     }
 
@@ -72,12 +72,12 @@ public class UrlService {
         urlRepository.deleteAll();
     }
 
-    public void addUrlInfo(UrlDtoAdd url) {
+    public void addUrlInfo(UrlAddDto url) {
         if (urlExists(url.getUrl()))
             throw new UrlConflictException();
         if (displayNameExists(url.getDisplayName()))
             throw new DisplayNameConflictException();
-        var urlInfo = UrlDtoAdd.toEntity(url);
+        var urlInfo = UrlAddDto.toEntity(url);
         urlRepository.save(urlInfo);
     }
 

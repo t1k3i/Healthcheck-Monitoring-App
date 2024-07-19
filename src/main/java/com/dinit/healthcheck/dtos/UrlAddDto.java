@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class UrlDtoAdd {
+public class UrlAddDto {
 
     @NotNull(message = "Url can not be null")
     @NotEmpty(message = "Url can not be empty")
@@ -21,9 +21,9 @@ public class UrlDtoAdd {
     @Size(min = 1, max = 255)
     private String displayName;
 
-    public UrlDtoAdd() {}
+    public UrlAddDto() {}
 
-    public UrlDtoAdd(String url, String displayName) {
+    public UrlAddDto(String url, String displayName) {
         this.url = url;
         this.displayName = displayName;
     }
@@ -52,7 +52,7 @@ public class UrlDtoAdd {
                 '}';
     }
 
-    public static URLInfo toEntity(UrlDtoAdd urlDto){
+    public static URLInfo toEntity(UrlAddDto urlDto){
         return new URLInfo(urlDto.getUrl(), urlDto.getDisplayName());
     }
 }
