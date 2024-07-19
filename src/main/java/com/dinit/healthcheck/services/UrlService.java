@@ -159,7 +159,7 @@ public class UrlService {
             int responseCode = con.getResponseCode();
             con.disconnect();
             return responseCode;
-        } catch (URISyntaxException | ClassCastException e1) {
+        } catch (URISyntaxException | ClassCastException | UnknownHostException e2) {
             logger.info("Url not valid");
             return -1;
         }
