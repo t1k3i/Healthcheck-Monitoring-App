@@ -3,11 +3,13 @@ package com.dinit.healthcheck.services;
 import com.dinit.healthcheck.models.AlertMail;
 import com.dinit.healthcheck.models.URLInfo;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -16,6 +18,9 @@ import java.util.logging.Logger;
 public class HealthCheckJobService {
     private final UrlService urlService;
     private final EmailService emailService;
+
+    @Value("${app.timezone}")
+    private String timeZone;
 
     Logger logger = Logger.getLogger(getClass().getName());
 
@@ -28,6 +33,7 @@ public class HealthCheckJobService {
     @Scheduled(fixedDelayString = "${fixed.delay}")
     public void updateDB() throws IOException {
         List<URLInfo> urls = urlService.getFullUrls();
+        ZoneId zoneId = ZoneId.of(timeZone);
         for (URLInfo url : urls) {
             Integer oldStatus = url.getStatus();
             Boolean oldHealthy = url.isHealthy();
@@ -36,7 +42,7 @@ public class HealthCheckJobService {
             Set<AlertMail> listOfMails = url.getAlertMails();
             url.setStatus(newStatus);
             url.setHealthy(newHealthy);
-            url.setLastChecked(LocalDateTime.now());
+            url.setLastChecked(LocalDateTime.now(zoneId));
             if ((isNull(oldStatus, oldHealthy) || stateChanged(oldStatus, newStatus, oldHealthy, newHealthy)) &&
                     !newHealthy && !listOfMails.isEmpty()) {
                 sendMail(url, listOfMails);
@@ -44,6 +50,7 @@ public class HealthCheckJobService {
             }
         }
     }
+
 
     private boolean stateChanged(Integer oldStatus, int newStatus,
                                  Boolean oldHealthy, boolean newHealthy) {
