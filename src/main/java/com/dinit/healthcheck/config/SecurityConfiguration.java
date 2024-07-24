@@ -20,7 +20,9 @@ public class SecurityConfiguration {
 
     private static final String URL_ENDPOINT = "/urls";
     private static final String URL_ENDPOINT_EMAILS = "/email";
-    private static final String URL_ENDPOINT_EX = "/{id:[0-9]+}";
+    private static final String USER_ENDPOINT = "/users";
+    private static final String ENDPOINT_ID = "/{id:[0-9]+}";
+
     private static final String ROLE_ADMIN = "ADMIN";
     private static final String ROLE_USER = "USER";
 
@@ -36,40 +38,29 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(expressionInterceptUrlRegistry -> expressionInterceptUrlRegistry
-                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT).hasAuthority(ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT + URL_ENDPOINT_EX).hasAuthority(ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.POST, "/users/register").hasAuthority(ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.GET, "/users").hasAuthority(ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.DELETE, "/users/{id:[0-9]+}").hasAuthority(ROLE_ADMIN)
+                                // user endpoints
+                                .requestMatchers(HttpMethod.POST, USER_ENDPOINT + "/register").hasAuthority(ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.GET, USER_ENDPOINT).hasAuthority(ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.DELETE, USER_ENDPOINT + ENDPOINT_ID).hasAuthority(ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.GET, USER_ENDPOINT + "/exists/**").hasAuthority(ROLE_ADMIN)
+                                // Url endpoints
+                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.POST, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + URL_ENDPOINT_EX).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT_EMAILS + URL_ENDPOINT_EX + "/emails")
+                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                                // Email endpoints
+                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT_EMAILS + ENDPOINT_ID + "/emails")
                                 .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.GET, URL_ENDPOINT_EMAILS + URL_ENDPOINT_EX + "/emails")
+                                .requestMatchers(HttpMethod.GET, URL_ENDPOINT_EMAILS + ENDPOINT_ID + "/emails")
                                 .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT_EMAILS + URL_ENDPOINT_EX + "/emails/**")
+                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT_EMAILS + ENDPOINT_ID + "/emails/**")
                                 .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(getOpenedResources()).permitAll()
                                 .anyRequest().permitAll())
                 .userDetailsService(userDetailsService)
                 .httpBasic(httpSecurityHttpBasicConfigurer ->
                         httpSecurityHttpBasicConfigurer.authenticationEntryPoint(authenticationEntryPoint));
         http.addFilterAfter(customFilter, BasicAuthenticationFilter.class);
         return http.build();
-    }
-
-    private String[] getOpenedResources() {
-        return new String[]{
-                "/swagger-ui/**",
-                "/swagger-resources",
-                "/swagger-resources/**",
-                "/v3/api-docs",
-                "/v3/api-docs/**",
-                URL_ENDPOINT,
-                URL_ENDPOINT + URL_ENDPOINT_EX,
-                URL_ENDPOINT + "/search",
-                "/users/authenticate"
-        };
     }
 
 }
