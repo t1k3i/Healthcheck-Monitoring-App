@@ -38,8 +38,8 @@ class UrlServiceTest {
     void testGetUrls() {
         //Arrange
         List<URLInfo> urlInfos =
-                List.of(new URLInfo("http://example.com", "Example"),
-                        new URLInfo("http://example2.com", "Example2"));
+                List.of(new URLInfo("http://example.com", "Example", 10),
+                        new URLInfo("http://example2.com", "Example2", 10));
 
         when(urlRepository.findAll()).thenReturn(urlInfos);
 
@@ -59,7 +59,7 @@ class UrlServiceTest {
     @Test
     void testGetUrl_Successful() {
         //Arrange
-        URLInfo newMockUrlInfo = new URLInfo("http://example.com","Example");
+        URLInfo newMockUrlInfo = new URLInfo("http://example.com","Example", 10);
         when(urlRepository.findById(1L)).thenReturn(Optional.of(newMockUrlInfo));
 
         //Act
@@ -116,7 +116,7 @@ class UrlServiceTest {
     @Test
     void testAddUrlInfo_Successful() {
         //Arrange
-        UrlAddDto urlAddDto = new UrlAddDto("http://example.com", "Example");
+        UrlAddDto urlAddDto = new UrlAddDto("http://example.com", "Example", 10);
 
         when(urlRepository.findByDisplayName(any())).thenReturn(Optional.empty());
         when(urlRepository.findByUrl(any())).thenReturn(Optional.empty());
@@ -132,7 +132,7 @@ class UrlServiceTest {
 
     @Test
     void testAddUrlInfo_Fail1() {
-        UrlAddDto urlAddDto = new UrlAddDto("http://example.com", "Example");
+        UrlAddDto urlAddDto = new UrlAddDto("http://example.com", "Example", 10);
         URLInfo url = UrlAddDto.toEntity(urlAddDto);
 
         when(urlRepository.findByUrl(anyString())).thenReturn(Optional.of(url));
@@ -149,7 +149,7 @@ class UrlServiceTest {
 
     @Test
     void testAddUrlInfo_Fail2() {
-        UrlAddDto urlAddDto = new UrlAddDto("http://example.com", "Example");
+        UrlAddDto urlAddDto = new UrlAddDto("http://example.com", "Example", 10);
         URLInfo url = UrlAddDto.toEntity(urlAddDto);
 
         when(urlRepository.findByUrl(anyString())).thenReturn(Optional.empty());
@@ -170,7 +170,7 @@ class UrlServiceTest {
         // Arrange
         Long urlId = 1L;
         UrlUpdateDto newUrlInfo = new UrlUpdateDto("New Display Name", "http://newurl.com");
-        URLInfo urlInfo = new URLInfo("http://example.com", "Example");
+        URLInfo urlInfo = new URLInfo("http://example.com", "Example", 10);
 
         when(urlRepository.findById(urlId)).thenReturn(Optional.of(urlInfo));
         when(urlRepository.findByDisplayName(any())).thenReturn(Optional.empty());
@@ -209,7 +209,7 @@ class UrlServiceTest {
         // Arrange
         Long urlId = 1L;
         UrlUpdateDto newUrlInfo = new UrlUpdateDto("http://newurl.com", "New Display Name");
-        URLInfo urlInfo = new URLInfo("http://example.com", "Example");
+        URLInfo urlInfo = new URLInfo("http://example.com", "Example", 10);
 
         when(urlRepository.findById(urlId)).thenReturn(Optional.of(urlInfo));
         when(urlRepository.findByDisplayName(newUrlInfo.getDisplayName())).thenReturn(Optional.of(urlInfo));
@@ -231,7 +231,7 @@ class UrlServiceTest {
         // Arrange
         Long urlId = 1L;
         UrlUpdateDto newUrlInfo = new UrlUpdateDto("http://newurl.com", "New Display Name");
-        URLInfo urlInfo = new URLInfo("http://example.com", "Example");
+        URLInfo urlInfo = new URLInfo("http://example.com", "Example", 10);
 
         when(urlRepository.findById(urlId)).thenReturn(Optional.of(urlInfo));
         when(urlRepository.findByDisplayName(newUrlInfo.getDisplayName())).thenReturn(Optional.empty());

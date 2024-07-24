@@ -17,6 +17,8 @@ public class URLInfo {
     private Integer status;
     private LocalDateTime lastChecked;
     private Boolean healthy;
+    private boolean mute;
+    private Integer frequency;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     @JoinTable(
@@ -29,9 +31,10 @@ public class URLInfo {
 
     public URLInfo() {}
 
-    public URLInfo(String url, String displayName) {
+    public URLInfo(String url, String displayName, Integer frequency) {
         this.url = url;
         this.displayName = displayName;
+        this.frequency = frequency;
     }
 
     public Long getId() {
@@ -56,6 +59,14 @@ public class URLInfo {
 
     public Boolean isHealthy() {
         return healthy;
+    }
+
+    public boolean isMute() {
+        return mute;
+    }
+
+    public Integer getFrequency() {
+        return frequency;
     }
 
     public Set<AlertMail> getAlertMails() {
@@ -86,6 +97,14 @@ public class URLInfo {
         this.healthy = healthy;
     }
 
+    public void setMute(boolean mute) {
+        this.mute = mute;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
+    }
+
     public void setAlertMails(Set<AlertMail> alertMails) {
         this.alertMails = alertMails;
     }
@@ -99,6 +118,8 @@ public class URLInfo {
                 ", status=" + status +
                 ", lastChecked=" + lastChecked +
                 ", healthy=" + healthy +
+                ", mute=" + mute +
+                ", frequency=" + frequency +
                 ", alertMails=" + alertMails +
                 '}';
     }
