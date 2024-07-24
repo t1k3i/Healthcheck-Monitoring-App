@@ -74,4 +74,8 @@ public class JpaUserDetailsService implements UserDetailsService {
             users.add(UserGetDto.toDto(user));
         return users;
     }
+
+    public boolean usernameExists(String username) {
+        return userRepository.existsByUsername(username);
+    }
 }

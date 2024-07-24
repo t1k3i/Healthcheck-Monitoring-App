@@ -24,6 +24,11 @@ public class UserController {
         return this.userDetailsService.getUsers();
     }
 
+    @GetMapping("/exists/{username}")
+    public boolean usernameExists(@PathVariable("username") String username) {
+        return userDetailsService.usernameExists(username);
+    }
+
     @PostMapping("/authenticate")
     public UserGetDto authenticateUser(@Valid @RequestBody UserAddDto userAddDto) {
         return userDetailsService.authenticateUser(userAddDto);
