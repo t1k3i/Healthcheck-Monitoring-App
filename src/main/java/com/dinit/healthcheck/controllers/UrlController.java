@@ -55,9 +55,4 @@ public class UrlController {
         urlService.updateDisplayName(urlId, urlInfo);
     }
 
-    @GetMapping("/test")
-    public List<URLInfo> getUrlsTest() {
-        return urlService.getFullUrls();
-    }
-
 }
