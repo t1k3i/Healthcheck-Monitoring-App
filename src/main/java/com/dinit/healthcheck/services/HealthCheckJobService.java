@@ -16,6 +16,7 @@ import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
 import java.net.*;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -49,8 +50,13 @@ public class HealthCheckJobService {
     @Scheduled(fixedDelayString = "${fixed.delay}")
     public void updateDB() throws IOException {
         List<URLInfo> urls = urlRepository.findAllWithAlertMails();
+        LocalDateTime now = LocalDateTime.now(zoneId).withSecond(0).withNano(0);
         for (URLInfo url : urls) if (!url.isMute()) {
-            performHealthcheckNow(url);
+            long diff = Duration.between(url.getLastChecked().withSecond(0), now).toMinutes();
+            if (diff >= url.getFrequency()) {
+                System.out.println("made health check " + url.getDisplayName());
+                performHealthcheckNow(url);
+            }
         }
     }
 
@@ -73,7 +79,7 @@ public class HealthCheckJobService {
         Set<AlertMail> listOfMails = url.getAlertMails();
         url.setStatus(newStatus);
         url.setHealthy(newHealthy);
-        url.setLastChecked(LocalDateTime.now(zoneId));
+        url.setLastChecked(LocalDateTime.now(zoneId).withNano(0));
         if ((isNull(oldStatus, oldHealthy) || stateChanged(oldStatus, newStatus, oldHealthy, newHealthy)) &&
                 !newHealthy && !listOfMails.isEmpty()) {
             sendMail(url, listOfMails);

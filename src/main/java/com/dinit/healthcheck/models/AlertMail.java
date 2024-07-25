@@ -53,7 +53,6 @@ public class AlertMail {
         return "AlertMail{" +
                 "id=" + id +
                 ", mail='" + mail + '\'' +
-                ", urlInfos=" + urlInfos +
                 '}';
     }
 }
