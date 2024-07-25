@@ -11,29 +11,19 @@ import com.dinit.healthcheck.models.URLInfo;
 import com.dinit.healthcheck.repositories.AlertMailRepository;
 import com.dinit.healthcheck.repositories.UrlRepository;
 import jakarta.transaction.Transactional;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
-import java.io.IOException;
-import java.net.*;
 import java.util.*;
-import java.util.logging.Logger;
 
 @Service
 public class UrlService {
 
     private final UrlRepository urlRepository;
     private final AlertMailRepository alertMailRepository;
-    private final RestClient restClient;
-
-    Logger logger = Logger.getLogger(getClass().getName());
 
     public UrlService(UrlRepository urlRepository, AlertMailRepository alertMailRepository) {
         this.urlRepository = urlRepository;
         this.alertMailRepository = alertMailRepository;
-        this.restClient = RestClient.builder().build();
     }
 
     public List<UrlGetDto> getUrls() {
@@ -42,10 +32,6 @@ public class UrlService {
         for (URLInfo urlInfo : urls)
             list.add(UrlGetDto.toUrlDto(urlInfo));
         return list;
-    }
-
-    public List<URLInfo> getFullUrls() {
-        return urlRepository.findAllWithAlertMails();
     }
 
     public UrlGetDto getUrl(Long id) {
@@ -161,45 +147,5 @@ public class UrlService {
             throw new EmailNotFoundException();
         urlInfo.getAlertMails().remove(alertMail);
         alertMail.getUrlInfos().remove(urlInfo);
-    }
-
-    public int getStatusFromUrl(String urlText) throws IOException {
-        try {
-            URL url = new URI(urlText).toURL();
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            int responseCode = con.getResponseCode();
-            con.disconnect();
-            return responseCode;
-        } catch (URISyntaxException | ClassCastException | UnknownHostException | MalformedURLException e2) {
-            logger.info("Url not valid");
-            return -1;
-        }
-    }
-
-    public boolean checkIfHealthy(String urlStr, int status) {
-        if (status == -1)
-            return false;
-
-        String result = restClient.get()
-                .uri(urlStr)
-                .retrieve()
-                .body(String.class);
-
-        if (result == null) {
-            logger.info("Not a JSON response");
-            return false;
-        }
-
-        JSONObject jsonObject;
-        try {
-            jsonObject = new JSONObject(result);
-        } catch (JSONException e) {
-            logger.info("Not the right json structure");
-            return false;
-        }
-
-        UrlResponseDto urlResponseDto = UrlResponseDto.fromJson(jsonObject);
-        return urlResponseDto.getStatus().equals("Healthy") &&
-                status == HttpURLConnection.HTTP_OK;
     }
 }
