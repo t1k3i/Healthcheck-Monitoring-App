@@ -23,8 +23,8 @@ public class UrlController {
     }
 
     @GetMapping
-    public List<UrlGetDto> getUrls() {
-        return urlService.getUrls();
+    public List<UrlGetDto> getUrls(@RequestParam(defaultValue = "true") boolean healthyFirst) {
+        return urlService.getUrls(healthyFirst);
     }
 
     @GetMapping("/{urlId}")

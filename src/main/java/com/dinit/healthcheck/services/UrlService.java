@@ -26,9 +26,9 @@ public class UrlService {
         this.alertMailRepository = alertMailRepository;
     }
 
-    public List<UrlGetDto> getUrls() {
+    public List<UrlGetDto> getUrls(boolean healthyFirst) {
         List<UrlGetDto> list = new ArrayList<>();
-        List<URLInfo> urls = urlRepository.findAll();
+        List<URLInfo> urls = healthyFirst ? urlRepository.findAllOrderByHealthyDesc() : urlRepository.findAllOrderByHealthyAsc();
         for (URLInfo urlInfo : urls)
             list.add(UrlGetDto.toUrlDto(urlInfo));
         return list;

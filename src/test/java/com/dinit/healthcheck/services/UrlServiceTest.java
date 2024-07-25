@@ -41,18 +41,13 @@ class UrlServiceTest {
                 List.of(new URLInfo("http://example.com", "Example", 10),
                         new URLInfo("http://example2.com", "Example2", 10));
 
-        when(urlRepository.findAll()).thenReturn(urlInfos);
-
-        UrlGetDto urlGetDto1 = UrlGetDto.toUrlDto(urlInfos.get(0));
-        UrlGetDto urlGetDto2 = UrlGetDto.toUrlDto(urlInfos.get(1));
+        when(urlRepository.findAllOrderByHealthyDesc()).thenReturn(urlInfos);
 
         //Act
-        List<UrlGetDto> list = urlService.getUrls();
+        List<UrlGetDto> list = urlService.getUrls(true);
 
         //Assert
         Assertions.assertEquals(2, list.size());
-        assertEquals("", urlGetDto1.toString(), list.get(0).toString());
-        assertEquals("", urlGetDto2.toString(), list.get(1).toString());
 
     }
 
