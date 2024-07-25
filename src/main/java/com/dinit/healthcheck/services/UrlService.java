@@ -96,6 +96,7 @@ public class UrlService {
             throw new UrlNotFoundException();
         String newDisplayName = newUrlInfo.getDisplayName();
         String newUrl = newUrlInfo.getUrl();
+        Integer newFrequency = newUrlInfo.getFrequency();
         if (newDisplayName != null && displayNameExists(newDisplayName) && !newDisplayName.equals(urlInfo.getDisplayName()))
             throw new DisplayNameConflictException();
         if (newUrl != null && urlExists(newUrl) && !newUrl.equals(urlInfo.getUrl()))
@@ -104,6 +105,8 @@ public class UrlService {
             urlInfo.setDisplayName(newDisplayName);
         if (newUrl != null)
             urlInfo.setUrl(newUrl);
+        if (newFrequency != null)
+            urlInfo.setFrequency(newFrequency);
     }
 
     @Transactional
@@ -159,7 +162,7 @@ public class UrlService {
             int responseCode = con.getResponseCode();
             con.disconnect();
             return responseCode;
-        } catch (URISyntaxException | ClassCastException | UnknownHostException e2) {
+        } catch (URISyntaxException | ClassCastException | UnknownHostException | MalformedURLException e2) {
             logger.info("Url not valid");
             return -1;
         }

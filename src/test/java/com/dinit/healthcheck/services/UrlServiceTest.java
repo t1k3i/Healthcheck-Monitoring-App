@@ -169,7 +169,7 @@ class UrlServiceTest {
     void testUpdateDisplayName_Success() {
         // Arrange
         Long urlId = 1L;
-        UrlUpdateDto newUrlInfo = new UrlUpdateDto("New Display Name", "http://newurl.com");
+        UrlUpdateDto newUrlInfo = new UrlUpdateDto("New Display Name", "http://newurl.com", null);
         URLInfo urlInfo = new URLInfo("http://example.com", "Example", 10);
 
         when(urlRepository.findById(urlId)).thenReturn(Optional.of(urlInfo));
@@ -188,7 +188,7 @@ class UrlServiceTest {
     void testUpdateDisplayName_Fail1() {
         // Arrange
         Long urlId = 1L;
-        UrlUpdateDto newUrlInfo = new UrlUpdateDto("New Display Name", "http://newurl.com");
+        UrlUpdateDto newUrlInfo = new UrlUpdateDto("New Display Name", "http://newurl.com", null);
 
         when(urlRepository.findById(urlId)).thenReturn(Optional.empty());
 
@@ -208,7 +208,7 @@ class UrlServiceTest {
     void testUpdateDisplayName_DisplayNameConflict() {
         // Arrange
         Long urlId = 1L;
-        UrlUpdateDto newUrlInfo = new UrlUpdateDto("http://newurl.com", "New Display Name");
+        UrlUpdateDto newUrlInfo = new UrlUpdateDto("http://newurl.com", "New Display Name", null);
         URLInfo urlInfo = new URLInfo("http://example.com", "Example", 10);
 
         when(urlRepository.findById(urlId)).thenReturn(Optional.of(urlInfo));
@@ -230,7 +230,7 @@ class UrlServiceTest {
     void testUpdateDisplayName_UrlConflict() {
         // Arrange
         Long urlId = 1L;
-        UrlUpdateDto newUrlInfo = new UrlUpdateDto("http://newurl.com", "New Display Name");
+        UrlUpdateDto newUrlInfo = new UrlUpdateDto("http://newurl.com", "New Display Name", null);
         URLInfo urlInfo = new URLInfo("http://example.com", "Example", 10);
 
         when(urlRepository.findById(urlId)).thenReturn(Optional.of(urlInfo));

@@ -8,12 +8,16 @@ public class UrlGetDto {
     private String displayName;
     private Boolean healthy;
     private Long id;
+    private boolean mute;
+    private Integer frequency;
 
-    public UrlGetDto(String url, String displayName, Boolean healthy, Long id) {
+    public UrlGetDto(String url, String displayName, Boolean healthy, Long id, boolean mute, Integer frequency) {
         this.id = id;
         this.url = url;
         this.displayName = displayName;
         this.healthy = healthy;
+        this.mute = mute;
+        this.frequency = frequency;
     }
 
     public Long getId() {
@@ -26,6 +30,14 @@ public class UrlGetDto {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public boolean isMute() {
+        return mute;
+    }
+
+    public Integer getFrequency() {
+        return frequency;
     }
 
     public void setUrl(String url) {
@@ -48,17 +60,28 @@ public class UrlGetDto {
         this.id = id;
     }
 
+    public void setMute(boolean mute) {
+        this.mute = mute;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
+    }
+
     @Override
     public String toString() {
-        return "UrlDtoGet{" +
+        return "UrlGetDto{" +
                 "url='" + url + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", healthy=" + healthy +
+                ", id=" + id +
+                ", mute=" + mute +
+                ", frequency=" + frequency +
                 '}';
     }
 
     public static UrlGetDto toUrlDto(URLInfo urlInfo) {
-        return new UrlGetDto(urlInfo.getUrl(), urlInfo.getDisplayName(), urlInfo.isHealthy(), urlInfo.getId());
+        return new UrlGetDto(urlInfo.getUrl(), urlInfo.getDisplayName(), urlInfo.isHealthy(), urlInfo.getId(), urlInfo.isMute(), urlInfo.getFrequency());
     }
 
 }
