@@ -48,6 +48,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.POST, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + "/healthcheck" + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + "/toggle" + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
                                 // Email endpoints
                                 .requestMatchers(HttpMethod.PUT, URL_ENDPOINT_EMAILS + ENDPOINT_ID + "/emails")
                                 .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
