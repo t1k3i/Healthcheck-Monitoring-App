@@ -55,4 +55,9 @@ public class UrlController {
         urlService.updateDisplayName(urlId, urlInfo);
     }
 
+    @PutMapping("/toggle/{urlId}")
+    public void toggleMute(@PathVariable("urlId") Long urlId) {
+        urlService.toggleMute(urlId);
+    }
+
 }

@@ -110,6 +110,14 @@ public class UrlService {
     }
 
     @Transactional
+    public void toggleMute(Long urlId) {
+        URLInfo urlInfo = this.urlRepository.findById(urlId).orElse(null);
+        if (urlInfo == null)
+            throw new UrlNotFoundException();
+        urlInfo.setMute(!urlInfo.isMute());
+    }
+
+    @Transactional
     public void addEmailToUrlInfo(Long urlId, String email) {
         URLInfo urlInfo = urlRepository.findByIdWithAlertMails(urlId).orElse(null);
         if (urlInfo == null)

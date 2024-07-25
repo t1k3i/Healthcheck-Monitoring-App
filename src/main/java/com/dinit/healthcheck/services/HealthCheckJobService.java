@@ -34,7 +34,7 @@ public class HealthCheckJobService {
     public void updateDB() throws IOException {
         List<URLInfo> urls = urlService.getFullUrls();
         ZoneId zoneId = ZoneId.of(timeZone);
-        for (URLInfo url : urls) {
+        for (URLInfo url : urls) if (!url.isMute()) {
             Integer oldStatus = url.getStatus();
             Boolean oldHealthy = url.isHealthy();
             int newStatus = urlService.getStatusFromUrl(url.getUrl());
