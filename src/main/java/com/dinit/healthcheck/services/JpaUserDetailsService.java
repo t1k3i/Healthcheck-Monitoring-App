@@ -68,10 +68,11 @@ public class JpaUserDetailsService implements UserDetailsService {
         userRepository.deleteById(urlId);
     }
 
-    public List<UserGetDto> getUsers() {
+    public List<UserGetDto> getUsers(String currentUser) {
         List<UserGetDto> users = new ArrayList<>();
         for (User user : userRepository.findAllWithRole())
-            users.add(UserGetDto.toDto(user));
+            if(!user.getUsername().equals(currentUser))
+                users.add(UserGetDto.toDto(user));
         return users;
     }
 

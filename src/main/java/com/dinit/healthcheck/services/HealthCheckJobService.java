@@ -52,9 +52,12 @@ public class HealthCheckJobService {
         List<URLInfo> urls = urlRepository.findAllWithAlertMails();
         LocalDateTime now = LocalDateTime.now(zoneId).withSecond(0).withNano(0);
         for (URLInfo url : urls) if (!url.isMute()) {
+            if (url.getLastChecked() == null) {
+                performHealthcheckNow(url);
+                continue;
+            }
             long diff = Duration.between(url.getLastChecked().withSecond(0), now).toMinutes();
             if (diff >= url.getFrequency()) {
-                System.out.println("made health check " + url.getDisplayName());
                 performHealthcheckNow(url);
             }
         }

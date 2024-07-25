@@ -20,8 +20,8 @@ public class UserController {
     }
 
     @GetMapping()
-    public List<UserGetDto> getUsers() {
-        return this.userDetailsService.getUsers();
+    public List<UserGetDto> getUsers(@RequestParam String currentUser) {
+        return this.userDetailsService.getUsers(currentUser);
     }
 
     @GetMapping("/exists/{username}")

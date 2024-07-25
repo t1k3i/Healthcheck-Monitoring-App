@@ -1,7 +1,6 @@
 package com.dinit.healthcheck.controllers;
 
 import com.dinit.healthcheck.dtos.*;
-import com.dinit.healthcheck.models.URLInfo;
 import com.dinit.healthcheck.services.HealthCheckJobService;
 import com.dinit.healthcheck.services.UrlService;
 import jakarta.validation.Valid;
