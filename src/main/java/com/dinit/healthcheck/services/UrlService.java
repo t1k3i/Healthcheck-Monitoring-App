@@ -28,7 +28,8 @@ public class UrlService {
 
     public List<UrlGetDto> getUrls(boolean healthyFirst) {
         List<UrlGetDto> list = new ArrayList<>();
-        List<URLInfo> urls = healthyFirst ? urlRepository.findAllOrderByHealthyDesc() : urlRepository.findAllOrderByHealthyAsc();
+        List<URLInfo> urls = healthyFirst ? urlRepository.findAllOrderByHealthyDescThenById()
+                : urlRepository.findAllOrderByHealthyAscThenById();
         for (URLInfo urlInfo : urls)
             list.add(UrlGetDto.toUrlDto(urlInfo));
         return list;

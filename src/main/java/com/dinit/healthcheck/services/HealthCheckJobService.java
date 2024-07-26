@@ -73,8 +73,10 @@ public class HealthCheckJobService {
 
     @Transactional
     public void performHealthcheckNow(URLInfo url) throws IOException {
-        if (url.isMute())
+        if (url.isMute()) {
             logger.info("Url is muted");
+            return;
+        }
         Integer oldStatus = url.getStatus();
         Boolean oldHealthy = url.isHealthy();
         int newStatus = getStatusFromUrl(url.getUrl());

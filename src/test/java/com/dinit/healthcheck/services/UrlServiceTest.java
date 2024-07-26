@@ -41,7 +41,7 @@ class UrlServiceTest {
                 List.of(new URLInfo("http://example.com", "Example", 10),
                         new URLInfo("http://example2.com", "Example2", 10));
 
-        when(urlRepository.findAllOrderByHealthyDesc()).thenReturn(urlInfos);
+        when(urlRepository.findAllOrderByHealthyDescThenById()).thenReturn(urlInfos);
 
         //Act
         List<UrlGetDto> list = urlService.getUrls(true);
