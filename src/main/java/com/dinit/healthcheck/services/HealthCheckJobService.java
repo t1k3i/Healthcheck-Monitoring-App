@@ -77,16 +77,13 @@ public class HealthCheckJobService {
             logger.info("Url is muted");
             return;
         }
-        Integer oldStatus = url.getStatus();
-        Boolean oldHealthy = url.isHealthy();
         int newStatus = getStatusFromUrl(url.getUrl());
         boolean newHealthy = checkIfHealthy(url.getUrl(), newStatus);
         Set<AlertMail> listOfMails = url.getAlertMails();
         url.setStatus(newStatus);
         url.setHealthy(newHealthy);
         url.setLastChecked(LocalDateTime.now(zoneId).withNano(0));
-        if ((isNull(oldStatus, oldHealthy) || stateChanged(oldStatus, newStatus, oldHealthy, newHealthy)) &&
-                !newHealthy && !listOfMails.isEmpty()) {
+        if (!newHealthy && !listOfMails.isEmpty()) {
             sendMail(url, listOfMails);
             logger.info("Emails sent");
         }
@@ -99,7 +96,8 @@ public class HealthCheckJobService {
             int responseCode = con.getResponseCode();
             con.disconnect();
             return responseCode;
-        } catch (URISyntaxException | ClassCastException | UnknownHostException | MalformedURLException e2) {
+        } catch (URISyntaxException | ClassCastException | UnknownHostException |
+                 SocketException | MalformedURLException | SocketTimeoutException  e) {
             logger.info("Url not valid");
             return -1;
         }
@@ -132,20 +130,11 @@ public class HealthCheckJobService {
                 status == HttpURLConnection.HTTP_OK;
     }
 
-    private boolean stateChanged(Integer oldStatus, int newStatus,
-                                 Boolean oldHealthy, boolean newHealthy) {
-        return (oldStatus != newStatus || oldHealthy != newHealthy);
-    }
-
-    private boolean isNull(Integer oldStatus, Boolean oldHealthy) {
-        return oldStatus == null || oldHealthy == null;
-    }
-
     private void sendMail(URLInfo url, Set<AlertMail> listOfMails) {
         for (AlertMail alertMail : listOfMails) {
             String gmail = alertMail.getMail();
-            String subject = "Health Check fail";
-            String body = url.getDisplayName() + " just became unhealthy!!!\n" +
+            String subject = "Health Check Fail";
+            String body = url.getDisplayName() + " is unhealthy!!!\n" +
                     "(" + url.getUrl() + ")";
             emailService.sendEmail(gmail, subject, body);
         }

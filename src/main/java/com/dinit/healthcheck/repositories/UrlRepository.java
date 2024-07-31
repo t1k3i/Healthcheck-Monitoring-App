@@ -27,10 +27,20 @@ public interface UrlRepository extends JpaRepository<URLInfo, Long> {
 
     List<URLInfo> findByUrlContainingOrDisplayNameContaining(String urlKeyword, String displayNameKeyword);
 
-    @Query("SELECT u FROM URLInfo u ORDER BY u.healthy DESC, u.id DESC")
+    @Query("SELECT u FROM URLInfo u " +
+            "ORDER BY " +
+            "CASE WHEN u.healthy IS NULL THEN 1 ELSE 0 END, " +
+            "CASE WHEN u.mute = true THEN 1 ELSE 0 END, " +
+            "u.healthy DESC, " +
+            "u.id DESC")
     List<URLInfo> findAllOrderByHealthyDescThenById();
 
-    @Query("SELECT u FROM URLInfo u ORDER BY u.healthy ASC, u.id DESC")
+    @Query("SELECT u FROM URLInfo u " +
+            "ORDER BY " +
+            "CASE WHEN u.healthy IS NULL THEN 1 ELSE 0 END, " +
+            "CASE WHEN u.mute = true THEN 1 ELSE 0 END, " +
+            "u.healthy ASC, " +
+            "u.id DESC")
     List<URLInfo> findAllOrderByHealthyAscThenById();
 
 }

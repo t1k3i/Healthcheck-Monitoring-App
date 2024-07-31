@@ -2,6 +2,8 @@ package com.dinit.healthcheck.dtos;
 
 import com.dinit.healthcheck.models.URLInfo;
 
+import java.time.LocalDateTime;
+
 public class UrlGetDto {
 
     private String url;
@@ -9,14 +11,16 @@ public class UrlGetDto {
     private Boolean healthy;
     private Long id;
     private boolean mute;
+    private LocalDateTime lastChecked;
     private Integer frequency;
 
-    public UrlGetDto(String url, String displayName, Boolean healthy, Long id, boolean mute, Integer frequency) {
+    public UrlGetDto(String url, String displayName, Boolean healthy, Long id, boolean mute, LocalDateTime lastChecked, Integer frequency) {
         this.id = id;
         this.url = url;
         this.displayName = displayName;
         this.healthy = healthy;
         this.mute = mute;
+        this.lastChecked = lastChecked;
         this.frequency = frequency;
     }
 
@@ -34,6 +38,10 @@ public class UrlGetDto {
 
     public boolean isMute() {
         return mute;
+    }
+
+    public LocalDateTime getLastChecked() {
+        return lastChecked;
     }
 
     public Integer getFrequency() {
@@ -64,6 +72,10 @@ public class UrlGetDto {
         this.mute = mute;
     }
 
+    public void setLastChecked(LocalDateTime lastChecked) {
+        this.lastChecked = lastChecked;
+    }
+
     public void setFrequency(Integer frequency) {
         this.frequency = frequency;
     }
@@ -81,7 +93,8 @@ public class UrlGetDto {
     }
 
     public static UrlGetDto toUrlDto(URLInfo urlInfo) {
-        return new UrlGetDto(urlInfo.getUrl(), urlInfo.getDisplayName(), urlInfo.isHealthy(), urlInfo.getId(), urlInfo.isMute(), urlInfo.getFrequency());
+        return new UrlGetDto(urlInfo.getUrl(), urlInfo.getDisplayName(), urlInfo.isHealthy(),
+                urlInfo.getId(), urlInfo.isMute(), urlInfo.getLastChecked(), urlInfo.getFrequency());
     }
 
 }
