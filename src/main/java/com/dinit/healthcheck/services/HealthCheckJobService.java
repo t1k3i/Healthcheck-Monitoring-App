@@ -3,7 +3,9 @@ package com.dinit.healthcheck.services;
 import com.dinit.healthcheck.dtos.UrlResponseDto;
 import com.dinit.healthcheck.exceptions.notfound.UrlNotFoundException;
 import com.dinit.healthcheck.models.AlertMail;
+import com.dinit.healthcheck.models.HealthCheckHistory;
 import com.dinit.healthcheck.models.URLInfo;
+import com.dinit.healthcheck.repositories.HealthCheckHistoryRepository;
 import com.dinit.healthcheck.repositories.UrlRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
@@ -27,6 +29,7 @@ import java.util.logging.Logger;
 public class HealthCheckJobService {
     private final EmailService emailService;
     private final UrlRepository urlRepository;
+    private final HealthCheckHistoryRepository healthCheckHistoryRepository;
     private final RestClient restClient;
 
     @Value("${app.timezone}")
@@ -35,9 +38,10 @@ public class HealthCheckJobService {
 
     Logger logger = Logger.getLogger(getClass().getName());
 
-    public HealthCheckJobService(EmailService emailService, UrlRepository urlRepository) {
+    public HealthCheckJobService(EmailService emailService, UrlRepository urlRepository, HealthCheckHistoryRepository healthCheckHistoryRepository) {
         this.emailService = emailService;
         this.urlRepository = urlRepository;
+        this.healthCheckHistoryRepository = healthCheckHistoryRepository;
         this.restClient = RestClient.builder().build();
     }
 
@@ -82,7 +86,10 @@ public class HealthCheckJobService {
         Set<AlertMail> listOfMails = url.getAlertMails();
         url.setStatus(newStatus);
         url.setHealthy(newHealthy);
-        url.setLastChecked(LocalDateTime.now(zoneId).withNano(0));
+        LocalDateTime now = LocalDateTime.now(zoneId).withNano(0);
+        url.setLastChecked(now);
+        HealthCheckHistory history = new HealthCheckHistory(url, newHealthy, now);
+        healthCheckHistoryRepository.save(history);
         if (!newHealthy && !listOfMails.isEmpty()) {
             sendMail(url, listOfMails);
             logger.info("Emails sent");

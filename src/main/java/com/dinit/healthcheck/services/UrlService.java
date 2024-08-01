@@ -7,9 +7,13 @@ import com.dinit.healthcheck.exceptions.conflict.UrlConflictException;
 import com.dinit.healthcheck.exceptions.notfound.EmailNotFoundException;
 import com.dinit.healthcheck.exceptions.notfound.UrlNotFoundException;
 import com.dinit.healthcheck.models.AlertMail;
+import com.dinit.healthcheck.models.HealthCheckHistory;
 import com.dinit.healthcheck.models.URLInfo;
 import com.dinit.healthcheck.repositories.AlertMailRepository;
+import com.dinit.healthcheck.repositories.HealthCheckHistoryRepository;
 import com.dinit.healthcheck.repositories.UrlRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +24,12 @@ public class UrlService {
 
     private final UrlRepository urlRepository;
     private final AlertMailRepository alertMailRepository;
+    private final HealthCheckHistoryRepository healthCheckHistoryRepository;
 
-    public UrlService(UrlRepository urlRepository, AlertMailRepository alertMailRepository) {
+    public UrlService(UrlRepository urlRepository, AlertMailRepository alertMailRepository, HealthCheckHistoryRepository healthCheckHistoryRepository) {
         this.urlRepository = urlRepository;
         this.alertMailRepository = alertMailRepository;
+        this.healthCheckHistoryRepository = healthCheckHistoryRepository;
     }
 
     public List<UrlGetDto> getUrls(boolean healthyFirst) {
@@ -148,5 +154,22 @@ public class UrlService {
             throw new EmailNotFoundException();
         urlInfo.getAlertMails().remove(alertMail);
         alertMail.getUrlInfos().remove(urlInfo);
+    }
+
+    public List<HistoryDto> getHistory(Long urlId) {
+        if (!urlRepository.existsById(urlId))
+            throw new UrlNotFoundException();
+        List<HistoryDto> list = new ArrayList<>();
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<HealthCheckHistory> page = healthCheckHistoryRepository.findByUrlInfoId(urlId, pageRequest);
+        for (HealthCheckHistory healthCheckHistory : page.getContent())
+            list.add(HistoryDto.toDto(healthCheckHistory));
+        return list;
+    }
+
+    public void deleteHistory(Long urlId) {
+        if (!urlRepository.existsById(urlId))
+            throw new UrlNotFoundException();
+        healthCheckHistoryRepository.deleteByUrlInfoId(urlId);
     }
 }

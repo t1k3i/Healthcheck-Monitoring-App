@@ -29,6 +29,10 @@ public class URLInfo {
     @JsonManagedReference
     private Set<AlertMail> alertMails;
 
+    @OneToMany(mappedBy = "urlInfo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Set<HealthCheckHistory> healthCheckHistories;
+
     public URLInfo() {}
 
     public URLInfo(String url, String displayName, Integer frequency) {
@@ -73,6 +77,10 @@ public class URLInfo {
         return alertMails;
     }
 
+    public Set<HealthCheckHistory> getHealthCheckHistories() {
+        return healthCheckHistories;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -109,6 +117,10 @@ public class URLInfo {
         this.alertMails = alertMails;
     }
 
+    public void setHealthCheckHistories(Set<HealthCheckHistory> healthCheckHistories) {
+        this.healthCheckHistories = healthCheckHistories;
+    }
+
     @Override
     public String toString() {
         return "URLInfo{" +
@@ -121,6 +133,7 @@ public class URLInfo {
                 ", mute=" + mute +
                 ", frequency=" + frequency +
                 ", alertMails=" + alertMails +
+                ", healthCheckHistories=" + healthCheckHistories +
                 '}';
     }
 }

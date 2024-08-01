@@ -21,6 +21,7 @@ public class SecurityConfiguration {
     private static final String URL_ENDPOINT = "/urls";
     private static final String URL_ENDPOINT_EMAILS = "/email";
     private static final String USER_ENDPOINT = "/users";
+    private static final String HISTORY_ENDPOINT = "/history";
     private static final String ENDPOINT_ID = "/{id:[0-9]+}";
 
     private static final String ROLE_ADMIN = "ADMIN";
@@ -38,26 +39,29 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(expressionInterceptUrlRegistry -> expressionInterceptUrlRegistry
-                                // user endpoints
-                                .requestMatchers(HttpMethod.POST, USER_ENDPOINT + "/register").hasAuthority(ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.GET, USER_ENDPOINT).hasAuthority(ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.DELETE, USER_ENDPOINT + ENDPOINT_ID).hasAuthority(ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.GET, USER_ENDPOINT + "/exists/**").hasAuthority(ROLE_ADMIN)
-                                // Url endpoints
-                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.POST, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + "/healthcheck" + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + "/toggle" + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                // Email endpoints
-                                .requestMatchers(HttpMethod.PUT, URL_ENDPOINT_EMAILS + ENDPOINT_ID + "/emails")
-                                .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.GET, URL_ENDPOINT_EMAILS + ENDPOINT_ID + "/emails")
-                                .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT_EMAILS + ENDPOINT_ID + "/emails/**")
-                                .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                                .anyRequest().permitAll())
+                        // user endpoints
+                        .requestMatchers(HttpMethod.POST, USER_ENDPOINT + "/register").hasAuthority(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, USER_ENDPOINT).hasAuthority(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, USER_ENDPOINT + ENDPOINT_ID).hasAuthority(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, USER_ENDPOINT + "/exists/**").hasAuthority(ROLE_ADMIN)
+                        // History endpoints
+                        .requestMatchers(HttpMethod.GET, HISTORY_ENDPOINT + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, HISTORY_ENDPOINT + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        // Url endpoints
+                        .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.POST, URL_ENDPOINT).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + "/healthcheck" + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.PUT, URL_ENDPOINT + "/toggle" + ENDPOINT_ID).hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        // Email endpoints
+                        .requestMatchers(HttpMethod.PUT, URL_ENDPOINT_EMAILS + ENDPOINT_ID + "/emails")
+                        .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, URL_ENDPOINT_EMAILS + ENDPOINT_ID + "/emails")
+                        .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, URL_ENDPOINT_EMAILS + ENDPOINT_ID + "/emails/**")
+                        .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
+                        .anyRequest().permitAll())
                 .userDetailsService(userDetailsService)
                 .httpBasic(httpSecurityHttpBasicConfigurer ->
                         httpSecurityHttpBasicConfigurer.authenticationEntryPoint(authenticationEntryPoint));
