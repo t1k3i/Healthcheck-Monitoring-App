@@ -114,10 +114,16 @@ public class HealthCheckJobService {
         if (status == -1)
             return false;
 
-        String result = restClient.get()
-                .uri(urlStr)
-                .retrieve()
-                .body(String.class);
+        String result;
+        try {
+            result = restClient.get()
+                    .uri(urlStr)
+                    .retrieve()
+                    .body(String.class);
+        } catch (Exception e) {
+            logger.info("Forbidden health check");
+            return false;
+        }
 
         if (result == null) {
             logger.info("Not a JSON response");
