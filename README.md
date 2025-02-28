@@ -1,6 +1,6 @@
 # Healthcheck Monitoring App
 
-The Healthcheck Monitoring App is a backend service for a web-based application that monitors the health status of various services. Each service is checked using a URL, and the system determines whether it is healthy or unhealthy based on its response.
+The Healthcheck Monitoring App is a backend service for a web-based application that monitors the health status of various services. Each service is checked using a URL, and the system determines whether it is healthy or unhealthy based on its response body (not just the response status), which must match a predefined structure or content.
 
 This application allows authenticated users to manage services safely, including adding new services for monitoring. Additionally, it features an alerting system to notify users of any changes in service status. The app also stores and tracks past health check results for analysis.
 
